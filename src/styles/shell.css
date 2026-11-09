@@ -31,13 +31,15 @@ a {
   text-decoration: none;
 }
 
-/* ------------------------------------------------------------- Shell Layout */
+::selection {
+  background: var(--blue-soft);
+}
+
+/* ------------------------------------------------------------- layout */
 
 .app {
   display: flex;
   height: 100%;
-  width: 100%;
-  overflow: hidden;
 }
 
 .main {
@@ -45,11 +47,9 @@ a {
   min-width: 0;
   overflow-y: auto;
   position: relative;
-  display: flex;
-  flex-direction: column;
 }
 
-/* ------------------------------------------------------------- Sidebar */
+/* ------------------------------------------------------------- sidebar */
 
 .sidebar {
   width: var(--sidebar-w);
@@ -59,8 +59,6 @@ a {
   display: flex;
   flex-direction: column;
   user-select: none;
-  height: 100%;
-  overflow: hidden;
 }
 
 .sidebar-top {
@@ -68,7 +66,6 @@ a {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex-shrink: 0;
 }
 
 .brand {
@@ -86,20 +83,11 @@ a {
   width: 22px;
   height: 22px;
   flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.brand-logo svg {
-  width: 100%;
-  height: 100%;
 }
 
 .sidebar-actions {
   display: flex;
   gap: 6px;
-  align-items: center;
 }
 
 .search-box {
@@ -113,11 +101,13 @@ a {
   border-radius: 6px;
   background: var(--bg-input);
   color: var(--muted);
-  cursor: pointer;
+  cursor: text;
+  font: inherit;
   font-size: 13px;
+  margin: 0;
+  outline: none;
   text-align: left;
   user-select: none;
-  transition: border-color 0.12s, color 0.12s;
 }
 
 .search-box:hover {
@@ -148,10 +138,6 @@ a {
   margin-top: 14px;
 }
 
-.sidebar-section:first-child {
-  margin-top: 4px;
-}
-
 .sidebar-heading {
   display: flex;
   align-items: center;
@@ -167,19 +153,19 @@ a {
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 32px;
+  gap: 6px;
+  height: 30px;
   padding: 0 8px;
   border-radius: 6px;
   color: var(--text-2);
   cursor: pointer;
   white-space: nowrap;
-  font-size: 13.5px;
-  transition: background 0.12s, color 0.12s;
+  font: inherit;
   border: none;
   background: transparent;
   width: 100%;
   text-align: left;
+  text-decoration: none;
 }
 
 .nav-item:hover {
@@ -193,22 +179,6 @@ a {
   font-weight: 500;
 }
 
-.nav-item .twisty,
-.nav-item .icon {
-  width: 18px;
-  height: 18px;
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.nav-item.active .twisty,
-.nav-item.active .icon {
-  color: var(--text);
-}
-
 .nav-item .label {
   flex: 1;
   min-width: 0;
@@ -216,14 +186,32 @@ a {
   text-overflow: ellipsis;
 }
 
+.nav-item .twisty {
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.nav-item.active .twisty {
+  color: var(--text);
+}
+
+.nav-item .twisty:hover {
+  background: var(--bg-active);
+}
+
+.nav-item.drop-target {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+}
+
 .sidebar-bottom {
   border-top: 1px solid var(--border);
   padding: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--bg-sidebar);
-  flex-shrink: 0;
   margin-top: auto;
 }
 
@@ -231,7 +219,7 @@ a {
   display: none;
 }
 
-/* ------------------------------------------------------------- Mobile Shell & Drawer */
+/* ------------------------------------------------------------- mobile */
 
 .mobile-bar {
   display: none;
@@ -245,32 +233,21 @@ a {
   .sidebar {
     position: fixed;
     inset: 0 auto 0 0;
-    z-index: 50;
+    z-index: 40;
     transform: translateX(-100%);
-    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: none;
-    max-width: calc(100vw - 48px);
+    transition: transform 0.2s;
   }
-
   .app.nav-open .sidebar {
-    transform: translateX(0);
+    transform: none;
     box-shadow: var(--shadow-lg);
   }
-
-  .scrim {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 49;
-    background: rgba(0, 0, 0, 0.38);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-  }
-
   .app.nav-open .scrim {
     display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 39;
+    background: rgba(0, 0, 0, 0.3);
   }
-
   .mobile-bar {
     display: flex;
     align-items: center;
@@ -280,21 +257,10 @@ a {
     position: sticky;
     top: 0;
     background: var(--bg);
-    z-index: 20;
+    z-index: 6;
     font-weight: 600;
-    min-height: 48px;
   }
-
-  .mobile-bar-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
   .sidebar-close-btn {
-    display: flex;
+    display: inline-flex;
   }
 }
