@@ -10,6 +10,8 @@ export interface SidebarProps {
     children: React.ReactNode;
     bottom?: React.ReactNode;
     onClose?: () => void;
+    collapsed?: boolean;
+    onToggleCollapse?: () => void;
     className?: string;
 }
-export declare function Sidebar({ brand, headerActions, children, bottom, onClose, className, }: SidebarProps): React.JSX.Element;
+export declare function Sidebar({ brand, headerActions, children, bottom, onClose, collapsed, onToggleCollapse, className, }: SidebarProps): React.JSX.Element;

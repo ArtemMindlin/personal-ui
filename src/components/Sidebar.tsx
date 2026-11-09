@@ -1,5 +1,5 @@
 import type React from 'react'
-import { X } from 'lucide-react'
+import { PanelLeft, X } from 'lucide-react'
 
 export interface SidebarProps {
   brand?: {
@@ -12,6 +12,8 @@ export interface SidebarProps {
   children: React.ReactNode
   bottom?: React.ReactNode
   onClose?: () => void
+  collapsed?: boolean
+  onToggleCollapse?: () => void
   className?: string
 }
 
@@ -21,12 +23,14 @@ export function Sidebar({
   children,
   bottom,
   onClose,
+  collapsed = false,
+  onToggleCollapse,
   className = '',
 }: SidebarProps) {
   return (
-    <aside className={['sidebar', className].filter(Boolean).join(' ')}>
+    <aside className={['sidebar', collapsed ? 'is-collapsed' : '', className].filter(Boolean).join(' ')}>
       <div className="sidebar-top">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        <div className="brand-row">
           {brand && (
             <a
               href={brand.href || '#'}
@@ -39,20 +43,35 @@ export function Sidebar({
               }}
             >
               {brand.logo && <span className="brand-logo">{brand.logo}</span>}
-              <span>{brand.title}</span>
+              <span className="brand-name">{brand.title}</span>
             </a>
           )}
 
-          {onClose && (
-            <button
-              type="button"
-              className="btn ghost sm icon sidebar-close-btn"
-              onClick={onClose}
-              aria-label="Cerrar menú"
-            >
-              <X size={16} />
-            </button>
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            {onToggleCollapse && (
+              <button
+                type="button"
+                className="btn ghost sm icon collapse-btn"
+                title={collapsed ? 'Expandir barra lateral (⌘B / Ctrl+B)' : 'Plegar barra lateral (⌘B / Ctrl+B)'}
+                aria-label={collapsed ? 'Expandir barra lateral' : 'Plegar barra lateral'}
+                aria-expanded={!collapsed}
+                onClick={onToggleCollapse}
+              >
+                <PanelLeft size={16} />
+              </button>
+            )}
+
+            {onClose && (
+              <button
+                type="button"
+                className="btn ghost sm icon sidebar-close-btn"
+                onClick={onClose}
+                aria-label="Cerrar menú"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
         </div>
 
         {headerActions}

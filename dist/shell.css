@@ -79,6 +79,25 @@ a {
   color: var(--text);
 }
 
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.collapse-btn {
+  color: var(--text-2);
+}
+
+.collapse-btn:hover {
+  color: var(--text);
+}
+
+.collapsed-only {
+  display: none;
+}
+
 .brand-logo {
   width: 22px;
   height: 22px;
@@ -207,6 +226,101 @@ a {
   display: none;
 }
 
+/* ------------------------------------------------------------- desktop collapsible */
+
+@media (min-width: 801px) {
+  .sidebar {
+    transition: width 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sidebar.is-collapsed {
+    width: 56px;
+    min-width: 56px;
+    max-width: 56px;
+  }
+
+  .sidebar.is-collapsed .sidebar-top {
+    padding: 14px 8px 8px;
+    align-items: center;
+  }
+
+  .sidebar.is-collapsed .brand-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .sidebar.is-collapsed .brand {
+    padding: 2px 0 6px;
+  }
+
+  .sidebar.is-collapsed .brand span:not(.brand-logo),
+  .sidebar.is-collapsed .brand-name {
+    display: none;
+  }
+
+  .sidebar.is-collapsed .sidebar-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .sidebar.is-collapsed .search-box {
+    display: none;
+  }
+
+  .sidebar.is-collapsed .collapsed-only {
+    display: inline-flex;
+  }
+
+  .sidebar.is-collapsed .sidebar-scroll {
+    padding: 4px 6px 12px;
+  }
+
+  .sidebar.is-collapsed .sidebar-section {
+    display: none;
+  }
+
+  .sidebar.is-collapsed .sidebar-heading {
+    display: none;
+  }
+
+  .sidebar.is-collapsed .nav-item {
+    justify-content: center;
+    width: 40px;
+    height: 36px;
+    padding: 0 !important;
+    margin: 0 auto 2px;
+  }
+
+  .sidebar.is-collapsed .nav-item .label,
+  .sidebar.is-collapsed .nav-item .badge,
+  .sidebar.is-collapsed .nav-item .twisty:empty {
+    display: none;
+  }
+
+  .sidebar.is-collapsed .sidebar-bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 4px;
+  }
+
+  .sidebar.is-collapsed .sidebar-bottom .nav-item {
+    flex: none !important;
+    width: 40px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .sidebar.is-collapsed .prototype {
+    display: none;
+  }
+}
+
 /* ------------------------------------------------------------- mobile */
 
 .mobile-bar {
@@ -218,6 +332,9 @@ a {
 }
 
 @media (max-width: 800px) {
+  .collapse-btn {
+    display: none;
+  }
   .sidebar {
     position: fixed;
     inset: 0 auto 0 0;
