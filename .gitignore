@@ -1,3 +1,7 @@
 node_modules
 .DS_Store
 *.log
+
+# Ensure dist is tracked for direct npm git installs
+!dist/
+!dist/**
