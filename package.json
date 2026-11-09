@@ -1,6 +1,6 @@
 {
   "name": "personal-ui",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Shared design system and shell components for personal tools",
   "author": "Artem Mindlin",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build && tsc --emitDeclarationOnly && node -e \"import('fs').then(fs => fs.cpSync('src/styles', 'dist', { recursive: true }))\"",
+    "build": "vite build && tsc --emitDeclarationOnly && node -e \"import('fs').then(fs => { for (const f of ['tokens.css', 'shell.css', 'components.css']) fs.copyFileSync('src/styles/' + f, 'dist/' + f); })\"",
     "dev": "vite build --watch"
   },
   "peerDependencies": {
