@@ -1,0 +1,19 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    lib: {
+      entry: resolve(import.meta.dirname, 'src/index.ts'),
+      name: 'PersonalUI',
+      formats: ['es'],
+      fileName: () => 'index.js',
+      cssFileName: 'styles',
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'lucide-react', 'react-router-dom'],
+    },
+  },
+})
