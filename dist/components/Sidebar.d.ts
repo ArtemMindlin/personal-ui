@@ -9,7 +9,7 @@ export interface SidebarBrand {
 }
 export interface SidebarSearch {
     placeholder?: string;
-    shortcut?: string;
+    shortcut?: string | false;
     value?: string;
     onChange?: (value: string) => void;
     onClick?: () => void;

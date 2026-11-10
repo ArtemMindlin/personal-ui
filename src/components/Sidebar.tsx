@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { PanelLeft, X, Search as SearchIcon, Settings } from 'lucide-react'
 import { NavItem } from './NavItem'
 import { ThemeToggle } from './ThemeToggle'
@@ -14,7 +14,7 @@ export interface SidebarBrand {
 
 export interface SidebarSearch {
   placeholder?: string
-  shortcut?: string
+  shortcut?: string | false
   value?: string
   onChange?: (value: string) => void
   onClick?: () => void
@@ -85,6 +85,11 @@ export function Sidebar({
   })
 
   const isCollapsed = isControlled ? controlledCollapsed : uncontrolledCollapsed
+  const searchInput = useRef<HTMLInputElement>(null)
+  const focusSearchOnExpand = useRef(false)
+  const searchShortcut = search?.shortcut ?? '/'
+  const editableSearch = Boolean(search?.onChange)
+  const searchEnabled = Boolean(search && (editableSearch || search.onClick))
 
   const handleToggle = useCallback(() => {
     if (onToggleCollapse) {
@@ -104,6 +109,40 @@ export function Sidebar({
       })
     }
   }, [isControlled, onToggleCollapse, storageKey])
+
+  const activateSearch = useCallback(() => {
+    if (isCollapsed) {
+      focusSearchOnExpand.current = editableSearch
+      handleToggle()
+    }
+    if (editableSearch) {
+      if (!isCollapsed) searchInput.current?.focus()
+    } else {
+      search?.onClick?.()
+    }
+  }, [editableSearch, isCollapsed, handleToggle, search?.onClick])
+
+  useEffect(() => {
+    if (!isCollapsed && focusSearchOnExpand.current) {
+      focusSearchOnExpand.current = false
+      searchInput.current?.focus()
+    }
+  }, [isCollapsed])
+
+  useEffect(() => {
+    if (!searchEnabled || !searchShortcut) return
+
+    const handleSearchKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || e.isComposing || e.repeat || e.metaKey || e.ctrlKey || e.altKey || e.key !== searchShortcut) return
+      const target = e.target
+      if (target instanceof HTMLElement && (target.isContentEditable || target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]'))) return
+      e.preventDefault()
+      activateSearch()
+    }
+
+    window.addEventListener('keydown', handleSearchKeyDown)
+    return () => window.removeEventListener('keydown', handleSearchKeyDown)
+  }, [searchEnabled, searchShortcut, activateSearch])
 
   useEffect(() => {
     if (!enableShortcut) return
@@ -213,25 +252,39 @@ export function Sidebar({
 
         {search && (
           <div className="sidebar-actions">
-            <div
-              className="search-box"
-              onClick={search.onClick}
-              role={search.onClick ? 'button' : undefined}
-              tabIndex={search.onClick ? 0 : undefined}
-            >
-              <SearchIcon size={14} />
-              <span>{search.placeholder || 'Buscar'}</span>
-              <span className="kbd">{search.shortcut || '/'}</span>
-            </div>
+            {editableSearch ? (
+              <label className="search-box">
+                <SearchIcon size={14} aria-hidden="true" />
+                <input
+                  ref={searchInput}
+                  type="search"
+                  aria-label={search.title || search.placeholder || 'Buscar'}
+                  placeholder={search.placeholder || 'Buscar'}
+                  value={search.value}
+                  onChange={(e) => search.onChange?.(e.target.value)}
+                />
+                {searchShortcut && <kbd className="kbd" aria-hidden="true">{searchShortcut}</kbd>}
+              </label>
+            ) : (
+              <button
+                type="button"
+                className="search-box"
+                onClick={search.onClick}
+                title={search.title}
+                disabled={!search.onClick}
+              >
+                <SearchIcon size={14} aria-hidden="true" />
+                <span>{search.placeholder || 'Buscar'}</span>
+                {searchShortcut && <kbd className="kbd" aria-hidden="true">{searchShortcut}</kbd>}
+              </button>
+            )}
             <button
               type="button"
               className="btn ghost sm icon collapsed-only"
-              title={search.title || `Buscar (${search.shortcut || '/'})`}
-              aria-label={search.placeholder || 'Buscar'}
-              onClick={() => {
-                if (isCollapsed) handleToggle()
-                search.onClick?.()
-              }}
+              title={search.title || (searchShortcut ? `Buscar (${searchShortcut})` : 'Buscar')}
+              aria-label={search.title || search.placeholder || 'Buscar'}
+              disabled={!editableSearch && !search.onClick}
+              onClick={activateSearch}
             >
               <SearchIcon size={14} />
             </button>
