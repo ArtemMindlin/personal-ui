@@ -84,7 +84,7 @@ export function AppSidebar({ navOpen, setNavOpen }: { navOpen: boolean; setNavOp
 2. **Close button (`X`) is strictly for mobile drawers**. It is rendered automatically when `onClose` is passed and has `display: none !important` on desktop (`> 800px`).
 3. **Bottom row (`.sidebar-bottom.row`)**:
    - Left: Navigation link or trigger (e.g. Ajustes, Perfil, Cuenta) taking `flex: 1`.
-   - Right: Icon-only theme toggle (`<ThemeToggle />`).
+   - Put theme selection in Settings with `<ThemeSelector />`.
    - Automatically collapses into icon stack in collapsed mode (`is-collapsed`).
 4. **Keyboard shortcut**: `⌘B` / `Ctrl+B` is built into `<Sidebar>` out of the box.
 
@@ -141,3 +141,7 @@ Pass `createItems` to `Sidebar` to display the shared `+` button and menu beside
   {navigation}
 </Sidebar>
 ```
+
+### Theme settings
+
+Use `ThemeSelector` in the Settings page, passing `value` and `onChange`. The sidebar footer does not show a theme toggle by default.
