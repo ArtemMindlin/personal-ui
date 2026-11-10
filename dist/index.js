@@ -366,53 +366,55 @@ function O({ sidebar: t, mobileBar: n, children: r, className: i = "", defaultNa
 }
 // src/components/CommandPalette.tsx
 var k = (e) => e.trim().toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-function A({ open: e, onClose: t, items: o, placeholder: s = "Buscar comandos…", label: c = "Búsqueda rápida", emptyMessage: l = "No hay resultados." }) {
-	let u = i(null), d = i(null), f = r(), [p, g] = a(""), [_, v] = a(0), y = k(p), b = o.filter((e) => k(`${e.label} ${e.description ?? ""} ${e.keywords ?? ""}`).includes(y)), x = Math.min(_, b.length - 1);
+function A({ open: e, onClose: t, items: o, placeholder: s = "Buscar comandos…", label: c = "Búsqueda rápida", emptyMessage: l = "No hay resultados.", onQueryChange: u, filterItems: d = !0 }) {
+	let f = i(null), p = i(null), g = r(), [_, v] = a(""), [y, b] = a(0), x = k(_), S = d ? o.filter((e) => k(`${e.label} ${e.description ?? ""} ${e.keywords ?? ""}`).includes(x)) : o, C = Math.min(y, S.length - 1);
 	n(() => {
-		let t = u.current;
-		t && (e && !t.open ? (g(""), v(0), t.showModal(), d.current?.focus()) : !e && t.open && t.close());
-	}, [e]);
-	let S = (e) => {
+		let t = f.current;
+		t && (e && !t.open ? (v(""), u?.(""), b(0), t.showModal(), p.current?.focus()) : !e && t.open && t.close());
+	}, [e]), n(() => {
+		C >= 0 && document.getElementById(`${g}-${C}`)?.scrollIntoView?.({ block: "nearest" });
+	}, [C, g]);
+	let w = (e) => {
 		t(), e.onSelect();
 	};
 	return /* @__PURE__ */ h("dialog", {
-		ref: u,
+		ref: f,
 		className: "command-palette",
 		"aria-label": c,
 		onCancel: (e) => {
 			e.preventDefault(), t();
 		},
 		onClick: (e) => {
-			e.target === u.current && t();
+			e.target === f.current && t();
 		},
 		children: [/* @__PURE__ */ m("input", {
-			ref: d,
+			ref: p,
 			type: "search",
 			role: "combobox",
 			"aria-label": c,
 			"aria-expanded": "true",
-			"aria-controls": f,
-			"aria-activedescendant": x >= 0 ? `${f}-${x}` : void 0,
+			"aria-controls": g,
+			"aria-activedescendant": C >= 0 ? `${g}-${C}` : void 0,
 			placeholder: s,
-			value: p,
+			value: _,
 			onChange: (e) => {
-				g(e.target.value), v(0);
+				v(e.target.value), u?.(e.target.value), b(0);
 			},
 			onKeyDown: (e) => {
-				e.key === "ArrowDown" && b.length && (e.preventDefault(), v((x + 1) % b.length)), e.key === "ArrowUp" && b.length && (e.preventDefault(), v((x + b.length - 1) % b.length)), e.key === "Enter" && x >= 0 && (e.preventDefault(), S(b[x]));
+				e.key === "ArrowDown" && S.length && (e.preventDefault(), b((C + 1) % S.length)), e.key === "ArrowUp" && S.length && (e.preventDefault(), b((C + S.length - 1) % S.length)), e.key === "Enter" && C >= 0 && (e.preventDefault(), w(S[C]));
 			}
 		}), /* @__PURE__ */ h("div", {
-			id: f,
+			id: g,
 			role: "listbox",
 			"aria-label": "Resultados",
 			className: "command-palette-results",
-			children: [b.map((e, t) => /* @__PURE__ */ h("div", {
-				id: `${f}-${t}`,
+			children: [S.map((e, t) => /* @__PURE__ */ h("div", {
+				id: `${g}-${t}`,
 				role: "option",
-				"aria-selected": t === x,
+				"aria-selected": t === C,
 				className: "command-palette-result",
-				onMouseEnter: () => v(t),
-				onClick: () => S(e),
+				onMouseEnter: () => b(t),
+				onClick: () => w(e),
 				children: [e.icon && /* @__PURE__ */ m("span", {
 					className: "command-palette-icon",
 					children: e.icon
@@ -423,7 +425,7 @@ function A({ open: e, onClose: t, items: o, placeholder: s = "Buscar comandos…
 					className: "command-palette-description",
 					children: e.description
 				})] })]
-			}, e.id)), !b.length && /* @__PURE__ */ m("p", {
+			}, e.id)), !S.length && /* @__PURE__ */ m("p", {
 				className: "command-palette-empty",
 				role: "status",
 				children: l
