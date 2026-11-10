@@ -16,11 +16,24 @@ export interface SidebarSearch {
     action?: React.ReactNode;
     title?: string;
 }
+export interface SidebarFooter {
+    to?: string;
+    href?: string;
+    label?: React.ReactNode;
+    icon?: React.ReactNode;
+    as?: React.ElementType;
+    onClick?: (e?: React.MouseEvent) => void;
+    active?: boolean;
+    themeToggle?: boolean | React.ReactNode;
+    themeStorageKey?: string;
+    extra?: React.ReactNode;
+}
 export interface SidebarProps {
     brand?: SidebarBrand;
     search?: SidebarSearch;
     headerActions?: React.ReactNode;
     children: React.ReactNode;
+    footer?: SidebarFooter | boolean;
     bottom?: React.ReactNode;
     bottomClassName?: string;
     onClose?: () => void;
@@ -32,7 +45,7 @@ export interface SidebarProps {
     className?: string;
     'aria-label'?: string;
 }
-export declare function Sidebar({ brand, search, headerActions, children, bottom, bottomClassName, onClose, collapsed: controlledCollapsed, defaultCollapsed, onToggleCollapse, enableShortcut, storageKey, className, 'aria-label': ariaLabel, }: SidebarProps): React.JSX.Element;
+export declare function Sidebar({ brand, search, headerActions, children, footer, bottom, bottomClassName, onClose, collapsed: controlledCollapsed, defaultCollapsed, onToggleCollapse, enableShortcut, storageKey, className, 'aria-label': ariaLabel, }: SidebarProps): React.JSX.Element;
 export interface SidebarBottomProps {
     className?: string;
     children: React.ReactNode;

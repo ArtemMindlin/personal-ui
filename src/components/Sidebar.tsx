@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { PanelLeft, X, Search as SearchIcon } from 'lucide-react'
+import { PanelLeft, X, Search as SearchIcon, Settings } from 'lucide-react'
+import { NavItem } from './NavItem'
+import { ThemeToggle } from './ThemeToggle'
 
 export interface SidebarBrand {
   logo?: React.ReactNode
@@ -20,11 +22,25 @@ export interface SidebarSearch {
   title?: string
 }
 
+export interface SidebarFooter {
+  to?: string
+  href?: string
+  label?: React.ReactNode
+  icon?: React.ReactNode
+  as?: React.ElementType
+  onClick?: (e?: React.MouseEvent) => void
+  active?: boolean
+  themeToggle?: boolean | React.ReactNode
+  themeStorageKey?: string
+  extra?: React.ReactNode
+}
+
 export interface SidebarProps {
   brand?: SidebarBrand
   search?: SidebarSearch
   headerActions?: React.ReactNode
   children: React.ReactNode
+  footer?: SidebarFooter | boolean
   bottom?: React.ReactNode
   bottomClassName?: string
   onClose?: () => void
@@ -42,6 +58,7 @@ export function Sidebar({
   search,
   headerActions,
   children,
+  footer,
   bottom,
   bottomClassName = 'row',
   onClose,
@@ -127,6 +144,42 @@ export function Sidebar({
     )
   }
 
+  const renderBottom = () => {
+    if (bottom) return bottom
+
+    if (footer) {
+      const footerOptions = typeof footer === 'object' ? footer : {}
+      const to = footerOptions.to ?? (footerOptions.href ? undefined : '/settings')
+      const label = footerOptions.label ?? 'Ajustes'
+      const icon = footerOptions.icon ?? <Settings size={14} />
+
+      return (
+        <>
+          <NavItem
+            as={footerOptions.as || (to || footerOptions.href ? 'a' : 'button')}
+            to={to}
+            href={footerOptions.href}
+            icon={icon}
+            label={label}
+            active={footerOptions.active}
+            onClick={footerOptions.onClick}
+            style={{ flex: 1 }}
+          />
+          {footerOptions.themeToggle !== false && (
+            React.isValidElement(footerOptions.themeToggle) ? (
+              footerOptions.themeToggle
+            ) : (
+              <ThemeToggle storageKey={footerOptions.themeStorageKey} />
+            )
+          )}
+          {footerOptions.extra}
+        </>
+      )
+    }
+
+    return null
+  }
+
   return (
     <aside className={['sidebar', isCollapsed ? 'is-collapsed' : '', className].filter(Boolean).join(' ')}>
       <div className="sidebar-top">
@@ -193,9 +246,9 @@ export function Sidebar({
         {children}
       </nav>
 
-      {bottom && (
+      {(bottom || footer) && (
         <div className={['sidebar-bottom', bottomClassName].filter(Boolean).join(' ')}>
-          {bottom}
+          {renderBottom()}
         </div>
       )}
     </aside>
