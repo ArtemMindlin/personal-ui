@@ -97,7 +97,7 @@ a {
 }
 
 .collapsed-only,
-.btn.collapsed-only {
+.sidebar .btn.collapsed-only {
   display: none;
   color: var(--text-2);
 }
@@ -336,7 +336,8 @@ button.search-box {
     display: none;
   }
 
-  .sidebar.is-collapsed .collapsed-only {
+  .sidebar.is-collapsed .collapsed-only,
+  .sidebar.is-collapsed .btn.collapsed-only {
     display: inline-flex;
   }
 

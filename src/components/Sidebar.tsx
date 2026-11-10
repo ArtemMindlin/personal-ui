@@ -48,6 +48,9 @@ export interface SidebarProps {
   defaultCollapsed?: boolean
   onToggleCollapse?: () => void
   enableShortcut?: boolean
+  enableSearchShortcut?: boolean
+  sidebarRef?: React.Ref<HTMLElement>
+  asideProps?: Omit<React.ComponentPropsWithoutRef<'aside'>, 'className' | 'children'>
   storageKey?: string
   className?: string
   'aria-label'?: string
@@ -66,6 +69,9 @@ export function Sidebar({
   defaultCollapsed = false,
   onToggleCollapse,
   enableShortcut = true,
+  enableSearchShortcut = true,
+  sidebarRef,
+  asideProps,
   storageKey,
   className = '',
   'aria-label': ariaLabel = 'Principal',
@@ -130,7 +136,7 @@ export function Sidebar({
   }, [isCollapsed])
 
   useEffect(() => {
-    if (!searchEnabled || !searchShortcut) return
+    if (!enableSearchShortcut || !searchEnabled || !searchShortcut) return
 
     const handleSearchKeyDown = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.isComposing || e.repeat || e.metaKey || e.ctrlKey || e.altKey || e.key !== searchShortcut) return
@@ -142,7 +148,7 @@ export function Sidebar({
 
     window.addEventListener('keydown', handleSearchKeyDown)
     return () => window.removeEventListener('keydown', handleSearchKeyDown)
-  }, [searchEnabled, searchShortcut, activateSearch])
+  }, [enableSearchShortcut, searchEnabled, searchShortcut, activateSearch])
 
   useEffect(() => {
     if (!enableShortcut) return
@@ -220,7 +226,7 @@ export function Sidebar({
   }
 
   return (
-    <aside className={['sidebar', isCollapsed ? 'is-collapsed' : '', className].filter(Boolean).join(' ')}>
+    <aside {...asideProps} ref={sidebarRef} className={['sidebar', isCollapsed ? 'is-collapsed' : '', className].filter(Boolean).join(' ')}>
       <div className="sidebar-top">
         <div className="brand-row">
           {renderBrand()}
