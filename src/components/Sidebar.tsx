@@ -213,7 +213,7 @@ export function Sidebar({
             onClick={footerOptions.onClick}
             style={{ flex: 1 }}
           />
-          {footerOptions.themeToggle !== false && (
+          {footerOptions.themeToggle && (
             React.isValidElement(footerOptions.themeToggle) ? (
               footerOptions.themeToggle
             ) : (

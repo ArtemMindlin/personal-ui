@@ -19,10 +19,10 @@ Import the complete stylesheet:
 
 ### 2. Fully Typed Sidebar & Shell Components
 
-Always import `<Sidebar>`, `<NavItem>`, `<ThemeToggle>` and shell components directly from `personal-ui` instead of constructing custom sidebar HTML:
+Always import `<Sidebar>`, `<NavItem>` and shell components directly from `personal-ui` instead of constructing custom sidebar HTML:
 
 ```tsx
-import { Sidebar, NavItem, ThemeToggle, SidebarBottom, SidebarSection } from 'personal-ui'
+import { Sidebar, NavItem, SidebarBottom, SidebarSection } from 'personal-ui'
 import { LayoutDashboard, ListChecks, Settings } from 'lucide-react'
 import { NavLink, Link } from 'react-router-dom'
 
@@ -54,7 +54,6 @@ export function AppSidebar({ navOpen, setNavOpen }: { navOpen: boolean; setNavOp
             style={{ flex: 1 }}
             onClick={() => setNavOpen(false)}
           />
-          <ThemeToggle storageKey="miapp.theme" />
         </>
       }
     >
@@ -84,7 +83,7 @@ export function AppSidebar({ navOpen, setNavOpen }: { navOpen: boolean; setNavOp
 2. **Close button (`X`) is strictly for mobile drawers**. It is rendered automatically when `onClose` is passed and has `display: none !important` on desktop (`> 800px`).
 3. **Bottom row (`.sidebar-bottom.row`)**:
    - Left: Navigation link or trigger (e.g. Ajustes, Perfil, Cuenta) taking `flex: 1`.
-   - Right: Icon-only theme toggle (`<ThemeToggle />`).
+   - Put theme selection in Settings with `<ThemeSelector />`.
    - Automatically collapses into icon stack in collapsed mode (`is-collapsed`).
 4. **Keyboard shortcut**: `⌘B` / `Ctrl+B` is built into `<Sidebar>` out of the box.
 
@@ -141,3 +140,7 @@ Pass `createItems` to `Sidebar` to display the shared `+` button and menu beside
   {navigation}
 </Sidebar>
 ```
+
+### Theme settings
+
+Use `ThemeSelector` in the Settings page, passing `value` and `onChange`. The sidebar footer does not show a theme toggle by default.

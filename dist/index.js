@@ -244,7 +244,7 @@ function E({ brand: r, search: o, headerActions: s, createItems: l, children: f,
 					onClick: t.onClick,
 					style: { flex: 1 }
 				}),
-				t.themeToggle !== !1 && (e.isValidElement(t.themeToggle) ? t.themeToggle : /* @__PURE__ */ h(w, { storageKey: t.themeStorageKey })),
+				t.themeToggle && (e.isValidElement(t.themeToggle) ? t.themeToggle : /* @__PURE__ */ h(w, { storageKey: t.themeStorageKey })),
 				t.extra
 			] });
 		}
@@ -504,4 +504,23 @@ function M({ open: e, onClose: t, items: o, placeholder: s = "Buscar comandos…
 		})]
 	});
 }
-export { M as CommandPalette, T as CreateMenu, k as MobileBar, C as NavItem, A as Shell, E as Sidebar, D as SidebarBottom, O as SidebarSection, w as ThemeToggle, b as applyTheme, y as getTheme, x as isDarkActive, _ as themeLabels, S as useTheme };
+// src/components/ThemeSelector.tsx
+function N({ value: e, onChange: t, options: n = [
+	"system",
+	"light",
+	"dark"
+] }) {
+	return /* @__PURE__ */ h("div", {
+		className: "segmented",
+		role: "group",
+		"aria-label": "Tema",
+		children: n.map((n) => /* @__PURE__ */ h("button", {
+			type: "button",
+			className: e === n ? "on" : void 0,
+			"aria-pressed": e === n,
+			onClick: () => t(n),
+			children: _[n]
+		}, n))
+	});
+}
+export { M as CommandPalette, T as CreateMenu, k as MobileBar, C as NavItem, A as Shell, E as Sidebar, D as SidebarBottom, O as SidebarSection, N as ThemeSelector, w as ThemeToggle, b as applyTheme, y as getTheme, x as isDarkActive, _ as themeLabels, S as useTheme };
