@@ -88,6 +88,33 @@ export function AppSidebar({ navOpen, setNavOpen }: { navOpen: boolean; setNavOp
    - Automatically collapses into icon stack in collapsed mode (`is-collapsed`).
 4. **Keyboard shortcut**: `⌘B` / `Ctrl+B` is built into `<Sidebar>` out of the box.
 
+### Sidebar quick search
+
+Pass `search.onChange` to render an editable search field. The app owns the query and decides what to filter (sections, products, or other results):
+
+```tsx
+const [query, setQuery] = useState('')
+const normalizedQuery = query.trim().toLocaleLowerCase('es')
+
+<Sidebar
+  brand={{ title: 'Gracy' }}
+  search={{
+    placeholder: 'Buscar',
+    title: 'Buscar secciones',
+    value: query,
+    onChange: setQuery,
+  }}
+>
+  {sections
+    .filter((section) => section.label.toLocaleLowerCase('es').includes(normalizedQuery))
+    .map((section) => <NavItem key={section.to} {...section} />)}
+</Sidebar>
+```
+
+The `/` shortcut focuses the field and expands a collapsed sidebar. It ignores typing in form fields, editable content, modifier keys, and events already handled by the app. Set `search.shortcut` to another single key or `false` to disable it. With a controlled `collapsed` prop, provide `onToggleCollapse` so the search can expand the sidebar.
+
+For a command palette or search dialog, pass `search.onClick` without `onChange`. This renders a native button with Enter/Space support; `/` invokes the same callback. `search.action` accepts an optional adjacent action, such as a create button. Search is opt-in: consuming apps must pass `search` to show it.
+
 ## Development
 
 ```bash
