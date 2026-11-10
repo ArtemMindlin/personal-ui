@@ -5,75 +5,88 @@ Shared design system, tokens, and shell layout components for Artem's personal w
 ## Installation
 
 ```bash
-npm install github:ArtemMindlin/personal-ui
-```
-
-Or reference a specific version / tag:
-```bash
-npm install github:ArtemMindlin/personal-ui#v0.1.0
+npm install github:ArtemMindlin/personal-ui#v0.2.5
 ```
 
 ## Usage
 
-### 1. CSS Only
+### 1. CSS
 
-Import the full stylesheet (tokens, shell layout, buttons, inputs, badges):
+Import the complete stylesheet:
 ```css
 @import 'personal-ui/styles.css';
 ```
 
-Or import modular parts:
-```css
-@import 'personal-ui/tokens.css';
-@import 'personal-ui/shell.css';
-@import 'personal-ui/components.css';
-```
+### 2. Fully Typed Sidebar & Shell Components
 
-### 2. React Components
+Always import `<Sidebar>`, `<NavItem>`, `<ThemeToggle>` and shell components directly from `personal-ui` instead of constructing custom sidebar HTML:
 
 ```tsx
-import 'personal-ui/styles.css'
-import { Shell, Sidebar, NavItem, ThemeToggle, MobileBar } from 'personal-ui'
-import { Home, Layers } from 'lucide-react'
+import { Sidebar, NavItem, ThemeToggle, SidebarBottom, SidebarSection } from 'personal-ui'
+import { LayoutDashboard, ListChecks, Settings } from 'lucide-react'
+import { NavLink, Link } from 'react-router-dom'
 
-export function App() {
+export function AppSidebar({ navOpen, setNavOpen }: { navOpen: boolean; setNavOpen: (v: boolean) => void }) {
   return (
-    <Shell
-      mobileBar={{
+    <Sidebar
+      brand={{
+        logo: <Logo />,
         title: 'Mi App',
+        as: Link,
+        to: '/',
+        onClick: () => setNavOpen(false),
       }}
-      sidebar={({ onClose }) => (
-        <Sidebar
-          brand={{ title: 'Mi App' }}
-          onClose={onClose}
-          bottom={
-            <div className="row" style={{ width: '100%' }}>
-              <ThemeToggle />
-            </div>
-          }
-        >
-          <NavItem href="/" icon={<Home size={18} />} label="Inicio" active />
-          <NavItem href="/items" icon={<Layers size={18} />} label="Elementos" />
-        </Sidebar>
-      )}
+      storageKey="miapp.sidebar-collapsed"
+      enableShortcut={true} // ⌘B / Ctrl+B toggle
+      onClose={() => setNavOpen(false)} // mobile drawer close (auto hidden on desktop via CSS)
+      search={{
+        placeholder: 'Buscar',
+        shortcut: '/',
+        onClick: () => openPalette(),
+      }}
+      bottom={
+        <>
+          <NavItem
+            as={NavLink}
+            to="/settings"
+            icon={<Settings size={14} />}
+            label="Ajustes"
+            style={{ flex: 1 }}
+            onClick={() => setNavOpen(false)}
+          />
+          <ThemeToggle storageKey="miapp.theme" />
+        </>
+      }
     >
-      <main className="content">
-        {/* Your app views */}
-      </main>
-    </Shell>
+      <NavItem
+        as={NavLink}
+        to="/"
+        end
+        icon={<LayoutDashboard size={14} />}
+        label="Inicio"
+        onClick={() => setNavOpen(false)}
+      />
+      <NavItem
+        as={NavLink}
+        to="/items"
+        icon={<ListChecks size={14} />}
+        label="Lista"
+        badge={12}
+        onClick={() => setNavOpen(false)}
+      />
+    </Sidebar>
   )
 }
 ```
 
-## Theme support
-
-Includes light and dark modes with persistent system / light / dark switching via:
-
-```tsx
-import { useTheme, ThemeToggle } from 'personal-ui'
-
-const { theme, isDark, setTheme, cycleTheme } = useTheme('my-app.theme')
-```
+### Unified Sidebar Rules
+1. **Never copy-paste raw `<aside className="sidebar">` HTML**. Always use `<Sidebar>` from `personal-ui`.
+2. **Close button (`X`) is strictly for mobile drawers**. It is rendered automatically when `onClose` is passed and has `display: none !important` on desktop (`> 800px`).
+3. **Bottom row (`.sidebar-bottom.row`)**:
+   - Left: Navigation link or trigger (e.g. Ajustes, Perfil, Cuenta) taking `flex: 1`.
+   - Right: Icon-only theme toggle (`<ThemeToggle />`).
+   - Automatically collapses into icon stack in collapsed mode (`is-collapsed`).
+4. **Keyboard shortcut**: `⌘B` / `Ctrl+B` is built into `<Sidebar>` out of the box.
 
 ## Development
 
