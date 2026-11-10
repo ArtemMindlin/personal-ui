@@ -19,10 +19,10 @@ Import the complete stylesheet:
 
 ### 2. Fully Typed Sidebar & Shell Components
 
-Always import `<Sidebar>`, `<NavItem>`, `<ThemeToggle>` and shell components directly from `personal-ui` instead of constructing custom sidebar HTML:
+Always import `<Sidebar>`, `<NavItem>` and shell components directly from `personal-ui` instead of constructing custom sidebar HTML:
 
 ```tsx
-import { Sidebar, NavItem, ThemeToggle, SidebarBottom, SidebarSection } from 'personal-ui'
+import { Sidebar, NavItem, SidebarBottom, SidebarSection } from 'personal-ui'
 import { LayoutDashboard, ListChecks, Settings } from 'lucide-react'
 import { NavLink, Link } from 'react-router-dom'
 
@@ -54,7 +54,6 @@ export function AppSidebar({ navOpen, setNavOpen }: { navOpen: boolean; setNavOp
             style={{ flex: 1 }}
             onClick={() => setNavOpen(false)}
           />
-          <ThemeToggle storageKey="miapp.theme" />
         </>
       }
     >
