@@ -1,4 +1,5 @@
 import React from 'react';
+import { type CreateMenuItem } from './CreateMenu';
 export interface SidebarBrand {
     logo?: React.ReactNode;
     title: React.ReactNode;
@@ -32,6 +33,7 @@ export interface SidebarProps {
     brand?: SidebarBrand;
     search?: SidebarSearch;
     headerActions?: React.ReactNode;
+    createItems?: CreateMenuItem[];
     children: React.ReactNode;
     footer?: SidebarFooter | boolean;
     bottom?: React.ReactNode;
@@ -48,7 +50,7 @@ export interface SidebarProps {
     className?: string;
     'aria-label'?: string;
 }
-export declare function Sidebar({ brand, search, headerActions, children, footer, bottom, bottomClassName, onClose, collapsed: controlledCollapsed, defaultCollapsed, onToggleCollapse, enableShortcut, enableSearchShortcut, sidebarRef, asideProps, storageKey, className, 'aria-label': ariaLabel, }: SidebarProps): React.JSX.Element;
+export declare function Sidebar({ brand, search, headerActions, createItems, children, footer, bottom, bottomClassName, onClose, collapsed: controlledCollapsed, defaultCollapsed, onToggleCollapse, enableShortcut, enableSearchShortcut, sidebarRef, asideProps, storageKey, className, 'aria-label': ariaLabel, }: SidebarProps): React.JSX.Element;
 export interface SidebarBottomProps {
     className?: string;
     children: React.ReactNode;

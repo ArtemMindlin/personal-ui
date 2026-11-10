@@ -603,3 +603,8 @@
 .command-palette-title { font-weight: 500; }
 .command-palette-description, .command-palette-empty { color: var(--muted); font-size: 12px; }
 .command-palette-empty { margin: 12px; }
+
+.create-menu { position: relative; flex: none; }
+.create-menu-popup { position: absolute; right: 0; top: calc(100% + 6px); z-index: 100; min-width: 190px; max-width: min(300px, calc(100vw - 32px)); padding: 4px; background: var(--bg-elev); color: var(--text); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-lg); }
+.create-menu-popup button { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; border: 0; border-radius: 5px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.create-menu-popup button:hover, .create-menu-popup button:focus-visible { background: var(--bg-hover); outline: none; }

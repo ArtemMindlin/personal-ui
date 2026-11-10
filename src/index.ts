@@ -8,3 +8,4 @@ export * from './components/ThemeToggle'
 export * from './components/Shell'
 
 export * from './components/CommandPalette'
+export * from './components/CreateMenu'
