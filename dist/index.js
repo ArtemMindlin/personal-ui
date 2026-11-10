@@ -96,58 +96,101 @@ function C({ storageKey: e, className: t = "btn ghost sm icon", size: n = 15 }) 
 	});
 }
 // src/components/Sidebar.tsx
-function w({ brand: r, search: o, headerActions: s, children: d, footer: g, bottom: _, bottomClassName: v = "row", onClose: y, collapsed: b, defaultCollapsed: x = !1, onToggleCollapse: w, enableShortcut: T = !0, storageKey: E, className: D = "", "aria-label": O = "Principal" }) {
-	let k = b !== void 0, [A, j] = a(() => {
-		if (E && typeof window < "u") try {
-			let e = localStorage.getItem(E);
+function w({ brand: r, search: o, headerActions: s, children: d, footer: g, bottom: _, bottomClassName: v = "row", onClose: y, collapsed: b, defaultCollapsed: x = !1, onToggleCollapse: w, enableShortcut: T = !0, enableSearchShortcut: E = !0, sidebarRef: D, asideProps: O, storageKey: k, className: A = "", "aria-label": j = "Principal" }) {
+	let M = b !== void 0, [N, P] = a(() => {
+		if (k && typeof window < "u") try {
+			let e = localStorage.getItem(k);
 			if (e !== null) return e === "true";
 		} catch {}
 		return x;
-	}), M = k ? b : A, N = i(null), P = i(!1), F = o?.shortcut ?? "/", I = !!o?.onChange, L = !!(o && (I || o.onClick)), R = t(() => {
-		w && w(), k || j((e) => {
+	}), F = M ? b : N, I = i(null), L = i(!1), R = o?.shortcut ?? "/", z = !!o?.onChange, B = !!(o && (z || o.onClick)), V = t(() => {
+		w && w(), M || P((e) => {
 			let t = !e;
-			if (E && typeof window < "u") try {
-				localStorage.setItem(E, String(t));
+			if (k && typeof window < "u") try {
+				localStorage.setItem(k, String(t));
 			} catch {}
 			return t;
 		});
 	}, [
-		k,
-		w,
-		E
-	]), z = t(() => {
-		M && (P.current = I, R()), I ? M || N.current?.focus() : o?.onClick?.();
-	}, [
-		I,
 		M,
-		R,
+		w,
+		k
+	]), H = t(() => {
+		F && (L.current = z, V()), z ? F || I.current?.focus() : o?.onClick?.();
+	}, [
+		z,
+		F,
+		V,
 		o?.onClick
 	]);
-	return n(() => {
-		!M && P.current && (P.current = !1, N.current?.focus());
-	}, [M]), n(() => {
-		if (!L || !F) return;
+	n(() => {
+		!F && L.current && (L.current = !1, I.current?.focus());
+	}, [F]), n(() => {
+		if (!E || !B || !R) return;
 		let e = (e) => {
-			if (e.defaultPrevented || e.isComposing || e.repeat || e.metaKey || e.ctrlKey || e.altKey || e.key !== F) return;
+			if (e.defaultPrevented || e.isComposing || e.repeat || e.metaKey || e.ctrlKey || e.altKey || e.key !== R) return;
 			let t = e.target;
-			t instanceof HTMLElement && (t.isContentEditable || t.closest("input, textarea, select, [contenteditable]:not([contenteditable=\"false\"]), [role=\"textbox\"]")) || (e.preventDefault(), z());
+			t instanceof HTMLElement && (t.isContentEditable || t.closest("input, textarea, select, [contenteditable]:not([contenteditable=\"false\"]), [role=\"textbox\"]")) || (e.preventDefault(), H());
 		};
 		return window.addEventListener("keydown", e), () => window.removeEventListener("keydown", e);
 	}, [
-		L,
-		F,
-		z
+		E,
+		B,
+		R,
+		H
 	]), n(() => {
 		if (!T) return;
 		let e = (e) => {
-			(e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b" && (e.preventDefault(), R());
+			(e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b" && (e.preventDefault(), V());
 		};
 		return window.addEventListener("keydown", e), () => window.removeEventListener("keydown", e);
-	}, [T, R]), /* @__PURE__ */ h("aside", {
+	}, [T, V]);
+	let U = () => {
+		if (!r) return null;
+		let e = r.as || (r.to || r.href ? "a" : "div"), t = {
+			className: "brand",
+			onClick: (e) => {
+				r.onClick && (r.to || r.href && r.href !== "#" || e.preventDefault(), r.onClick(e));
+			}
+		};
+		return r.href && (t.href = r.href), r.to && (t.to = r.to), /* @__PURE__ */ h(e, {
+			...t,
+			children: [r.logo && /* @__PURE__ */ m("span", {
+				className: "brand-logo",
+				children: r.logo
+			}), /* @__PURE__ */ m("span", {
+				className: "brand-name",
+				children: r.title
+			})]
+		});
+	}, W = () => {
+		if (_) return _;
+		if (g) {
+			let t = typeof g == "object" ? g : {}, n = t.to ?? (t.href ? void 0 : "/settings"), r = t.label ?? "Ajustes", i = t.icon ?? /* @__PURE__ */ m(u, { size: 14 });
+			return /* @__PURE__ */ h(p, { children: [
+				/* @__PURE__ */ m(S, {
+					as: t.as || (n || t.href ? "a" : "button"),
+					to: n,
+					href: t.href,
+					icon: i,
+					label: r,
+					active: t.active,
+					onClick: t.onClick,
+					style: { flex: 1 }
+				}),
+				t.themeToggle !== !1 && (e.isValidElement(t.themeToggle) ? t.themeToggle : /* @__PURE__ */ m(C, { storageKey: t.themeStorageKey })),
+				t.extra
+			] });
+		}
+		return null;
+	};
+	return /* @__PURE__ */ h("aside", {
+		...O,
+		ref: D,
 		className: [
 			"sidebar",
-			M ? "is-collapsed" : "",
-			D
+			F ? "is-collapsed" : "",
+			A
 		].filter(Boolean).join(" "),
 		children: [
 			/* @__PURE__ */ h("div", {
@@ -155,25 +198,7 @@ function w({ brand: r, search: o, headerActions: s, children: d, footer: g, bott
 				children: [
 					/* @__PURE__ */ h("div", {
 						className: "brand-row",
-						children: [(() => {
-							if (!r) return null;
-							let e = r.as || (r.to || r.href ? "a" : "div"), t = {
-								className: "brand",
-								onClick: (e) => {
-									r.onClick && (r.to || r.href && r.href !== "#" || e.preventDefault(), r.onClick(e));
-								}
-							};
-							return r.href && (t.href = r.href), r.to && (t.to = r.to), /* @__PURE__ */ h(e, {
-								...t,
-								children: [r.logo && /* @__PURE__ */ m("span", {
-									className: "brand-logo",
-									children: r.logo
-								}), /* @__PURE__ */ m("span", {
-									className: "brand-name",
-									children: r.title
-								})]
-							});
-						})(), /* @__PURE__ */ h("div", {
+						children: [U(), /* @__PURE__ */ h("div", {
 							style: {
 								display: "flex",
 								alignItems: "center",
@@ -182,10 +207,10 @@ function w({ brand: r, search: o, headerActions: s, children: d, footer: g, bott
 							children: [/* @__PURE__ */ m("button", {
 								type: "button",
 								className: "btn ghost sm icon collapse-btn",
-								title: M ? "Expandir barra lateral (⌘B / Ctrl+B)" : "Plegar barra lateral (⌘B / Ctrl+B)",
-								"aria-label": M ? "Expandir barra lateral" : "Plegar barra lateral",
-								"aria-expanded": !M,
-								onClick: R,
+								title: F ? "Expandir barra lateral (⌘B / Ctrl+B)" : "Plegar barra lateral (⌘B / Ctrl+B)",
+								"aria-label": F ? "Expandir barra lateral" : "Plegar barra lateral",
+								"aria-expanded": !F,
+								onClick: V,
 								children: /* @__PURE__ */ m(c, { size: 16 })
 							}), y && /* @__PURE__ */ m("button", {
 								type: "button",
@@ -199,7 +224,7 @@ function w({ brand: r, search: o, headerActions: s, children: d, footer: g, bott
 					o && /* @__PURE__ */ h("div", {
 						className: "sidebar-actions",
 						children: [
-							I ? /* @__PURE__ */ h("label", {
+							z ? /* @__PURE__ */ h("label", {
 								className: "search-box",
 								children: [
 									/* @__PURE__ */ m(l, {
@@ -207,17 +232,17 @@ function w({ brand: r, search: o, headerActions: s, children: d, footer: g, bott
 										"aria-hidden": "true"
 									}),
 									/* @__PURE__ */ m("input", {
-										ref: N,
+										ref: I,
 										type: "search",
 										"aria-label": o.title || o.placeholder || "Buscar",
 										placeholder: o.placeholder || "Buscar",
 										value: o.value,
 										onChange: (e) => o.onChange?.(e.target.value)
 									}),
-									F && /* @__PURE__ */ m("kbd", {
+									R && /* @__PURE__ */ m("kbd", {
 										className: "kbd",
 										"aria-hidden": "true",
-										children: F
+										children: R
 									})
 								]
 							}) : /* @__PURE__ */ h("button", {
@@ -232,20 +257,20 @@ function w({ brand: r, search: o, headerActions: s, children: d, footer: g, bott
 										"aria-hidden": "true"
 									}),
 									/* @__PURE__ */ m("span", { children: o.placeholder || "Buscar" }),
-									F && /* @__PURE__ */ m("kbd", {
+									R && /* @__PURE__ */ m("kbd", {
 										className: "kbd",
 										"aria-hidden": "true",
-										children: F
+										children: R
 									})
 								]
 							}),
 							/* @__PURE__ */ m("button", {
 								type: "button",
 								className: "btn ghost sm icon collapsed-only",
-								title: o.title || (F ? `Buscar (${F})` : "Buscar"),
+								title: o.title || (R ? `Buscar (${R})` : "Buscar"),
 								"aria-label": o.title || o.placeholder || "Buscar",
-								disabled: !I && !o.onClick,
-								onClick: z,
+								disabled: !z && !o.onClick,
+								onClick: H,
 								children: /* @__PURE__ */ m(l, { size: 14 })
 							}),
 							o.action
@@ -256,32 +281,12 @@ function w({ brand: r, search: o, headerActions: s, children: d, footer: g, bott
 			}),
 			/* @__PURE__ */ m("nav", {
 				className: "sidebar-scroll",
-				"aria-label": O,
+				"aria-label": j,
 				children: d
 			}),
 			(_ || g) && /* @__PURE__ */ m("div", {
 				className: ["sidebar-bottom", v].filter(Boolean).join(" "),
-				children: (() => {
-					if (_) return _;
-					if (g) {
-						let t = typeof g == "object" ? g : {}, n = t.to ?? (t.href ? void 0 : "/settings"), r = t.label ?? "Ajustes", i = t.icon ?? /* @__PURE__ */ m(u, { size: 14 });
-						return /* @__PURE__ */ h(p, { children: [
-							/* @__PURE__ */ m(S, {
-								as: t.as || (n || t.href ? "a" : "button"),
-								to: n,
-								href: t.href,
-								icon: i,
-								label: r,
-								active: t.active,
-								onClick: t.onClick,
-								style: { flex: 1 }
-							}),
-							t.themeToggle !== !1 && (e.isValidElement(t.themeToggle) ? t.themeToggle : /* @__PURE__ */ m(C, { storageKey: t.themeStorageKey })),
-							t.extra
-						] });
-					}
-					return null;
-				})()
+				children: W()
 			})
 		]
 	});

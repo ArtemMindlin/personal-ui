@@ -41,11 +41,14 @@ export interface SidebarProps {
     defaultCollapsed?: boolean;
     onToggleCollapse?: () => void;
     enableShortcut?: boolean;
+    enableSearchShortcut?: boolean;
+    sidebarRef?: React.Ref<HTMLElement>;
+    asideProps?: Omit<React.ComponentPropsWithoutRef<'aside'>, 'className' | 'children'>;
     storageKey?: string;
     className?: string;
     'aria-label'?: string;
 }
-export declare function Sidebar({ brand, search, headerActions, children, footer, bottom, bottomClassName, onClose, collapsed: controlledCollapsed, defaultCollapsed, onToggleCollapse, enableShortcut, storageKey, className, 'aria-label': ariaLabel, }: SidebarProps): React.JSX.Element;
+export declare function Sidebar({ brand, search, headerActions, children, footer, bottom, bottomClassName, onClose, collapsed: controlledCollapsed, defaultCollapsed, onToggleCollapse, enableShortcut, enableSearchShortcut, sidebarRef, asideProps, storageKey, className, 'aria-label': ariaLabel, }: SidebarProps): React.JSX.Element;
 export interface SidebarBottomProps {
     className?: string;
     children: React.ReactNode;
