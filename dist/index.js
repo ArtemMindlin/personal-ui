@@ -1,13 +1,13 @@
-import e, { useCallback as t, useEffect as n, useRef as r, useState as i } from "react";
-import { Menu as a, Moon as o, PanelLeft as s, Search as c, Settings as l, Sun as u, X as d } from "lucide-react";
-import { Fragment as f, jsx as p, jsxs as m } from "react/jsx-runtime";
+import e, { useCallback as t, useEffect as n, useId as r, useRef as i, useState as a } from "react";
+import { Menu as o, Moon as s, PanelLeft as c, Search as l, Settings as u, Sun as d, X as f } from "lucide-react";
+import { Fragment as p, jsx as m, jsxs as h } from "react/jsx-runtime";
 // src/theme.ts
-var h = {
+var g = {
 	system: "Sistema",
 	light: "Claro",
 	dark: "Oscuro"
-}, g = "personal.theme";
-function _(e = g) {
+}, _ = "personal.theme";
+function v(e = _) {
 	if (typeof window > "u") return "system";
 	try {
 		let t = localStorage.getItem(e);
@@ -16,7 +16,7 @@ function _(e = g) {
 		return "system";
 	}
 }
-function v(e, t = g) {
+function y(e, t = _) {
 	if (typeof window < "u") {
 		try {
 			localStorage.setItem(t, e);
@@ -24,23 +24,23 @@ function v(e, t = g) {
 		e === "system" ? delete document.documentElement.dataset.theme : document.documentElement.dataset.theme = e;
 	}
 }
-function y(e) {
+function b(e) {
 	return typeof window > "u" ? !1 : e === "dark" || e !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
-function b(e = g) {
-	let [t, r] = i(() => _(e)), [a, o] = i(() => y(_(e)));
+function x(e = _) {
+	let [t, r] = a(() => v(e)), [i, o] = a(() => b(v(e)));
 	n(() => {
-		if (v(t, e), o(y(t)), t === "system") {
+		if (y(t, e), o(b(t)), t === "system") {
 			let e = window.matchMedia("(prefers-color-scheme: dark)"), t = () => o(e.matches);
 			return e.addEventListener("change", t), () => e.removeEventListener("change", t);
 		}
 	}, [t, e]);
 	let s = (t) => {
-		r(t), v(t, e);
+		r(t), y(t, e);
 	};
 	return {
 		theme: t,
-		isDark: a,
+		isDark: i,
 		setTheme: s,
 		cycleTheme: () => {
 			s({
@@ -52,7 +52,7 @@ function b(e = g) {
 	};
 }
 // src/components/NavItem.tsx
-function x({ label: e, icon: t, twisty: n, badge: r, active: i, onClick: a, href: o, to: s, as: c = o || s ? "a" : "button", className: l = "", title: u, style: d, children: f, ...h }) {
+function S({ label: e, icon: t, twisty: n, badge: r, active: i, onClick: a, href: o, to: s, as: c = o || s ? "a" : "button", className: l = "", title: u, style: d, children: f, ...p }) {
 	let g = [
 		"nav-item",
 		i ? "active" : "",
@@ -62,20 +62,20 @@ function x({ label: e, icon: t, twisty: n, badge: r, active: i, onClick: a, href
 		onClick: a,
 		title: u ?? (typeof e == "string" ? e : void 0),
 		style: d,
-		...h
+		...p
 	};
-	return o && (v.href = o), s && (v.to = s), /* @__PURE__ */ m(c, {
+	return o && (v.href = o), s && (v.to = s), /* @__PURE__ */ h(c, {
 		...v,
 		children: [
-			_ && /* @__PURE__ */ p("span", {
+			_ && /* @__PURE__ */ m("span", {
 				className: "twisty",
 				children: _
 			}),
-			/* @__PURE__ */ p("span", {
+			/* @__PURE__ */ m("span", {
 				className: "label",
 				children: e
 			}),
-			r != null && /* @__PURE__ */ p("span", {
+			r != null && /* @__PURE__ */ m("span", {
 				className: "badge",
 				children: r
 			}),
@@ -84,26 +84,26 @@ function x({ label: e, icon: t, twisty: n, badge: r, active: i, onClick: a, href
 	});
 }
 // src/components/ThemeToggle.tsx
-function S({ storageKey: e, className: t = "btn ghost sm icon", size: n = 15 }) {
-	let { theme: r, isDark: i, cycleTheme: a } = b(e);
-	return /* @__PURE__ */ p("button", {
+function C({ storageKey: e, className: t = "btn ghost sm icon", size: n = 15 }) {
+	let { theme: r, isDark: i, cycleTheme: a } = x(e);
+	return /* @__PURE__ */ m("button", {
 		type: "button",
 		className: t,
 		onClick: a,
-		title: `Tema: ${h[r]}`,
-		"aria-label": `Cambiar tema (actual: ${h[r]})`,
-		children: p(i ? o : u, { size: n })
+		title: `Tema: ${g[r]}`,
+		"aria-label": `Cambiar tema (actual: ${g[r]})`,
+		children: m(i ? s : d, { size: n })
 	});
 }
 // src/components/Sidebar.tsx
-function C({ brand: a, search: o, headerActions: u, children: h, footer: g, bottom: _, bottomClassName: v = "row", onClose: y, collapsed: b, defaultCollapsed: C = !1, onToggleCollapse: w, enableShortcut: T = !0, storageKey: E, className: D = "", "aria-label": O = "Principal" }) {
-	let k = b !== void 0, [A, j] = i(() => {
+function w({ brand: r, search: o, headerActions: s, children: d, footer: g, bottom: _, bottomClassName: v = "row", onClose: y, collapsed: b, defaultCollapsed: x = !1, onToggleCollapse: w, enableShortcut: T = !0, storageKey: E, className: D = "", "aria-label": O = "Principal" }) {
+	let k = b !== void 0, [A, j] = a(() => {
 		if (E && typeof window < "u") try {
 			let e = localStorage.getItem(E);
 			if (e !== null) return e === "true";
 		} catch {}
-		return C;
-	}), M = k ? b : A, N = r(null), P = r(!1), F = o?.shortcut ?? "/", I = !!o?.onChange, L = !!(o && (I || o.onClick)), R = t(() => {
+		return x;
+	}), M = k ? b : A, N = i(null), P = i(!1), F = o?.shortcut ?? "/", I = !!o?.onChange, L = !!(o && (I || o.onClick)), R = t(() => {
 		w && w(), k || j((e) => {
 			let t = !e;
 			if (E && typeof window < "u") try {
@@ -143,70 +143,70 @@ function C({ brand: a, search: o, headerActions: u, children: h, footer: g, bott
 			(e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b" && (e.preventDefault(), R());
 		};
 		return window.addEventListener("keydown", e), () => window.removeEventListener("keydown", e);
-	}, [T, R]), /* @__PURE__ */ m("aside", {
+	}, [T, R]), /* @__PURE__ */ h("aside", {
 		className: [
 			"sidebar",
 			M ? "is-collapsed" : "",
 			D
 		].filter(Boolean).join(" "),
 		children: [
-			/* @__PURE__ */ m("div", {
+			/* @__PURE__ */ h("div", {
 				className: "sidebar-top",
 				children: [
-					/* @__PURE__ */ m("div", {
+					/* @__PURE__ */ h("div", {
 						className: "brand-row",
 						children: [(() => {
-							if (!a) return null;
-							let e = a.as || (a.to || a.href ? "a" : "div"), t = {
+							if (!r) return null;
+							let e = r.as || (r.to || r.href ? "a" : "div"), t = {
 								className: "brand",
 								onClick: (e) => {
-									a.onClick && (a.to || a.href && a.href !== "#" || e.preventDefault(), a.onClick(e));
+									r.onClick && (r.to || r.href && r.href !== "#" || e.preventDefault(), r.onClick(e));
 								}
 							};
-							return a.href && (t.href = a.href), a.to && (t.to = a.to), /* @__PURE__ */ m(e, {
+							return r.href && (t.href = r.href), r.to && (t.to = r.to), /* @__PURE__ */ h(e, {
 								...t,
-								children: [a.logo && /* @__PURE__ */ p("span", {
+								children: [r.logo && /* @__PURE__ */ m("span", {
 									className: "brand-logo",
-									children: a.logo
-								}), /* @__PURE__ */ p("span", {
+									children: r.logo
+								}), /* @__PURE__ */ m("span", {
 									className: "brand-name",
-									children: a.title
+									children: r.title
 								})]
 							});
-						})(), /* @__PURE__ */ m("div", {
+						})(), /* @__PURE__ */ h("div", {
 							style: {
 								display: "flex",
 								alignItems: "center",
 								gap: "4px"
 							},
-							children: [/* @__PURE__ */ p("button", {
+							children: [/* @__PURE__ */ m("button", {
 								type: "button",
 								className: "btn ghost sm icon collapse-btn",
 								title: M ? "Expandir barra lateral (⌘B / Ctrl+B)" : "Plegar barra lateral (⌘B / Ctrl+B)",
 								"aria-label": M ? "Expandir barra lateral" : "Plegar barra lateral",
 								"aria-expanded": !M,
 								onClick: R,
-								children: /* @__PURE__ */ p(s, { size: 16 })
-							}), y && /* @__PURE__ */ p("button", {
+								children: /* @__PURE__ */ m(c, { size: 16 })
+							}), y && /* @__PURE__ */ m("button", {
 								type: "button",
 								className: "btn ghost sm icon sidebar-close-btn",
 								onClick: y,
 								"aria-label": "Cerrar menú",
-								children: /* @__PURE__ */ p(d, { size: 16 })
+								children: /* @__PURE__ */ m(f, { size: 16 })
 							})]
 						})]
 					}),
-					o && /* @__PURE__ */ m("div", {
+					o && /* @__PURE__ */ h("div", {
 						className: "sidebar-actions",
 						children: [
-							I ? /* @__PURE__ */ m("label", {
+							I ? /* @__PURE__ */ h("label", {
 								className: "search-box",
 								children: [
-									/* @__PURE__ */ p(c, {
+									/* @__PURE__ */ m(l, {
 										size: 14,
 										"aria-hidden": "true"
 									}),
-									/* @__PURE__ */ p("input", {
+									/* @__PURE__ */ m("input", {
 										ref: N,
 										type: "search",
 										"aria-label": o.title || o.placeholder || "Buscar",
@@ -214,59 +214,59 @@ function C({ brand: a, search: o, headerActions: u, children: h, footer: g, bott
 										value: o.value,
 										onChange: (e) => o.onChange?.(e.target.value)
 									}),
-									F && /* @__PURE__ */ p("kbd", {
+									F && /* @__PURE__ */ m("kbd", {
 										className: "kbd",
 										"aria-hidden": "true",
 										children: F
 									})
 								]
-							}) : /* @__PURE__ */ m("button", {
+							}) : /* @__PURE__ */ h("button", {
 								type: "button",
 								className: "search-box",
 								onClick: o.onClick,
 								title: o.title,
 								disabled: !o.onClick,
 								children: [
-									/* @__PURE__ */ p(c, {
+									/* @__PURE__ */ m(l, {
 										size: 14,
 										"aria-hidden": "true"
 									}),
-									/* @__PURE__ */ p("span", { children: o.placeholder || "Buscar" }),
-									F && /* @__PURE__ */ p("kbd", {
+									/* @__PURE__ */ m("span", { children: o.placeholder || "Buscar" }),
+									F && /* @__PURE__ */ m("kbd", {
 										className: "kbd",
 										"aria-hidden": "true",
 										children: F
 									})
 								]
 							}),
-							/* @__PURE__ */ p("button", {
+							/* @__PURE__ */ m("button", {
 								type: "button",
 								className: "btn ghost sm icon collapsed-only",
 								title: o.title || (F ? `Buscar (${F})` : "Buscar"),
 								"aria-label": o.title || o.placeholder || "Buscar",
 								disabled: !I && !o.onClick,
 								onClick: z,
-								children: /* @__PURE__ */ p(c, { size: 14 })
+								children: /* @__PURE__ */ m(l, { size: 14 })
 							}),
 							o.action
 						]
 					}),
-					u
+					s
 				]
 			}),
-			/* @__PURE__ */ p("nav", {
+			/* @__PURE__ */ m("nav", {
 				className: "sidebar-scroll",
 				"aria-label": O,
-				children: h
+				children: d
 			}),
-			(_ || g) && /* @__PURE__ */ p("div", {
+			(_ || g) && /* @__PURE__ */ m("div", {
 				className: ["sidebar-bottom", v].filter(Boolean).join(" "),
 				children: (() => {
 					if (_) return _;
 					if (g) {
-						let t = typeof g == "object" ? g : {}, n = t.to ?? (t.href ? void 0 : "/settings"), r = t.label ?? "Ajustes", i = t.icon ?? /* @__PURE__ */ p(l, { size: 14 });
-						return /* @__PURE__ */ m(f, { children: [
-							/* @__PURE__ */ p(x, {
+						let t = typeof g == "object" ? g : {}, n = t.to ?? (t.href ? void 0 : "/settings"), r = t.label ?? "Ajustes", i = t.icon ?? /* @__PURE__ */ m(u, { size: 14 });
+						return /* @__PURE__ */ h(p, { children: [
+							/* @__PURE__ */ m(S, {
 								as: t.as || (n || t.href ? "a" : "button"),
 								to: n,
 								href: t.href,
@@ -276,7 +276,7 @@ function C({ brand: a, search: o, headerActions: u, children: h, footer: g, bott
 								onClick: t.onClick,
 								style: { flex: 1 }
 							}),
-							t.themeToggle !== !1 && (e.isValidElement(t.themeToggle) ? t.themeToggle : /* @__PURE__ */ p(S, { storageKey: t.themeStorageKey })),
+							t.themeToggle !== !1 && (e.isValidElement(t.themeToggle) ? t.themeToggle : /* @__PURE__ */ m(C, { storageKey: t.themeStorageKey })),
 							t.extra
 						] });
 					}
@@ -286,8 +286,8 @@ function C({ brand: a, search: o, headerActions: u, children: h, footer: g, bott
 		]
 	});
 }
-function w({ className: e = "", children: t }) {
-	return /* @__PURE__ */ p("div", {
+function T({ className: e = "", children: t }) {
+	return /* @__PURE__ */ m("div", {
 		className: [
 			"sidebar-bottom",
 			"row",
@@ -296,36 +296,36 @@ function w({ className: e = "", children: t }) {
 		children: t
 	});
 }
-function T({ title: e, action: t, children: n, className: r = "" }) {
-	return /* @__PURE__ */ m("div", {
+function E({ title: e, action: t, children: n, className: r = "" }) {
+	return /* @__PURE__ */ h("div", {
 		className: ["sidebar-section", r].filter(Boolean).join(" "),
-		children: [(e || t) && /* @__PURE__ */ m("div", {
+		children: [(e || t) && /* @__PURE__ */ h("div", {
 			className: "sidebar-heading",
-			children: [e && /* @__PURE__ */ p("span", { children: e }), t]
+			children: [e && /* @__PURE__ */ m("span", { children: e }), t]
 		}), n]
 	});
 }
 // src/components/MobileBar.tsx
-function E({ title: e, logo: t, onToggleNav: n, actions: r, className: i = "mobile-bar" }) {
-	return /* @__PURE__ */ m("div", {
+function D({ title: e, logo: t, onToggleNav: n, actions: r, className: i = "mobile-bar" }) {
+	return /* @__PURE__ */ h("div", {
 		className: i,
 		children: [
-			/* @__PURE__ */ p("button", {
+			/* @__PURE__ */ m("button", {
 				type: "button",
 				className: "btn ghost sm icon menu-btn",
 				onClick: n,
 				"aria-label": "Abrir menú",
-				children: /* @__PURE__ */ p(a, { size: 18 })
+				children: /* @__PURE__ */ m(o, { size: 18 })
 			}),
-			t && /* @__PURE__ */ p("span", {
+			t && /* @__PURE__ */ m("span", {
 				className: "brand-logo",
 				children: t
 			}),
-			/* @__PURE__ */ p("span", {
+			/* @__PURE__ */ m("span", {
 				className: "mobile-bar-title",
 				children: e
 			}),
-			r && /* @__PURE__ */ p("div", {
+			r && /* @__PURE__ */ m("div", {
 				className: "mobile-bar-actions",
 				style: {
 					marginLeft: "auto",
@@ -338,23 +338,23 @@ function E({ title: e, logo: t, onToggleNav: n, actions: r, className: i = "mobi
 	});
 }
 // src/components/Shell.tsx
-function D({ sidebar: t, mobileBar: n, children: r, className: a = "", defaultNavOpen: o = !1 }) {
-	let [s, c] = i(o), l = () => c(!1), u = () => c((e) => !e), d = typeof t == "function" ? t({ onClose: l }) : t;
-	return /* @__PURE__ */ m("div", {
+function O({ sidebar: t, mobileBar: n, children: r, className: i = "", defaultNavOpen: o = !1 }) {
+	let [s, c] = a(o), l = () => c(!1), u = () => c((e) => !e), d = typeof t == "function" ? t({ onClose: l }) : t;
+	return /* @__PURE__ */ h("div", {
 		className: [
 			"app",
 			s ? "nav-open" : "",
-			a
+			i
 		].filter(Boolean).join(" "),
 		children: [
 			d,
-			/* @__PURE__ */ p("div", {
+			/* @__PURE__ */ m("div", {
 				className: "scrim",
 				onClick: l
 			}),
-			/* @__PURE__ */ m("div", {
+			/* @__PURE__ */ h("div", {
 				className: "main",
-				children: [e.isValidElement(n) ? n : n ? /* @__PURE__ */ p(E, {
+				children: [e.isValidElement(n) ? n : n ? /* @__PURE__ */ m(D, {
 					title: n.title || "",
 					logo: n.logo,
 					actions: n.actions,
@@ -364,4 +364,71 @@ function D({ sidebar: t, mobileBar: n, children: r, className: a = "", defaultNa
 		]
 	});
 }
-export { E as MobileBar, x as NavItem, D as Shell, C as Sidebar, w as SidebarBottom, T as SidebarSection, S as ThemeToggle, v as applyTheme, _ as getTheme, y as isDarkActive, h as themeLabels, b as useTheme };
+// src/components/CommandPalette.tsx
+var k = (e) => e.trim().toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+function A({ open: e, onClose: t, items: o, placeholder: s = "Buscar comandos…", label: c = "Búsqueda rápida", emptyMessage: l = "No hay resultados." }) {
+	let u = i(null), d = i(null), f = r(), [p, g] = a(""), [_, v] = a(0), y = k(p), b = o.filter((e) => k(`${e.label} ${e.description ?? ""} ${e.keywords ?? ""}`).includes(y)), x = Math.min(_, b.length - 1);
+	n(() => {
+		let t = u.current;
+		t && (e && !t.open ? (g(""), v(0), t.showModal(), d.current?.focus()) : !e && t.open && t.close());
+	}, [e]);
+	let S = (e) => {
+		t(), e.onSelect();
+	};
+	return /* @__PURE__ */ h("dialog", {
+		ref: u,
+		className: "command-palette",
+		"aria-label": c,
+		onCancel: (e) => {
+			e.preventDefault(), t();
+		},
+		onClick: (e) => {
+			e.target === u.current && t();
+		},
+		children: [/* @__PURE__ */ m("input", {
+			ref: d,
+			type: "search",
+			role: "combobox",
+			"aria-label": c,
+			"aria-expanded": "true",
+			"aria-controls": f,
+			"aria-activedescendant": x >= 0 ? `${f}-${x}` : void 0,
+			placeholder: s,
+			value: p,
+			onChange: (e) => {
+				g(e.target.value), v(0);
+			},
+			onKeyDown: (e) => {
+				e.key === "ArrowDown" && b.length && (e.preventDefault(), v((x + 1) % b.length)), e.key === "ArrowUp" && b.length && (e.preventDefault(), v((x + b.length - 1) % b.length)), e.key === "Enter" && x >= 0 && (e.preventDefault(), S(b[x]));
+			}
+		}), /* @__PURE__ */ h("div", {
+			id: f,
+			role: "listbox",
+			"aria-label": "Resultados",
+			className: "command-palette-results",
+			children: [b.map((e, t) => /* @__PURE__ */ h("div", {
+				id: `${f}-${t}`,
+				role: "option",
+				"aria-selected": t === x,
+				className: "command-palette-result",
+				onMouseEnter: () => v(t),
+				onClick: () => S(e),
+				children: [e.icon && /* @__PURE__ */ m("span", {
+					className: "command-palette-icon",
+					children: e.icon
+				}), /* @__PURE__ */ h("span", { children: [/* @__PURE__ */ m("span", {
+					className: "command-palette-title",
+					children: e.label
+				}), e.description && /* @__PURE__ */ m("span", {
+					className: "command-palette-description",
+					children: e.description
+				})] })]
+			}, e.id)), !b.length && /* @__PURE__ */ m("p", {
+				className: "command-palette-empty",
+				role: "status",
+				children: l
+			})]
+		})]
+	});
+}
+export { A as CommandPalette, D as MobileBar, S as NavItem, O as Shell, w as Sidebar, T as SidebarBottom, E as SidebarSection, C as ThemeToggle, y as applyTheme, v as getTheme, b as isDarkActive, g as themeLabels, x as useTheme };
