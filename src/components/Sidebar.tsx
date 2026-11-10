@@ -1,65 +1,149 @@
-import type React from 'react'
-import { PanelLeft, X } from 'lucide-react'
+import React, { useEffect, useState, useCallback } from 'react'
+import { PanelLeft, X, Search as SearchIcon } from 'lucide-react'
+
+export interface SidebarBrand {
+  logo?: React.ReactNode
+  title: React.ReactNode
+  href?: string
+  to?: string
+  onClick?: (e?: React.MouseEvent) => void
+  as?: React.ElementType
+}
+
+export interface SidebarSearch {
+  placeholder?: string
+  shortcut?: string
+  value?: string
+  onChange?: (value: string) => void
+  onClick?: () => void
+  action?: React.ReactNode
+  title?: string
+}
 
 export interface SidebarProps {
-  brand?: {
-    logo?: React.ReactNode
-    title: React.ReactNode
-    href?: string
-    onClick?: () => void
-  }
+  brand?: SidebarBrand
+  search?: SidebarSearch
   headerActions?: React.ReactNode
   children: React.ReactNode
   bottom?: React.ReactNode
+  bottomClassName?: string
   onClose?: () => void
   collapsed?: boolean
+  defaultCollapsed?: boolean
   onToggleCollapse?: () => void
+  enableShortcut?: boolean
+  storageKey?: string
   className?: string
+  'aria-label'?: string
 }
 
 export function Sidebar({
   brand,
+  search,
   headerActions,
   children,
   bottom,
+  bottomClassName = 'row',
   onClose,
-  collapsed = false,
+  collapsed: controlledCollapsed,
+  defaultCollapsed = false,
   onToggleCollapse,
+  enableShortcut = true,
+  storageKey,
   className = '',
+  'aria-label': ariaLabel = 'Principal',
 }: SidebarProps) {
+  const isControlled = controlledCollapsed !== undefined
+
+  const [uncontrolledCollapsed, setUncontrolledCollapsed] = useState(() => {
+    if (storageKey && typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem(storageKey)
+        if (stored !== null) return stored === 'true'
+      } catch {
+        /* storage may be restricted */
+      }
+    }
+    return defaultCollapsed
+  })
+
+  const isCollapsed = isControlled ? controlledCollapsed : uncontrolledCollapsed
+
+  const handleToggle = useCallback(() => {
+    if (onToggleCollapse) {
+      onToggleCollapse()
+    }
+    if (!isControlled) {
+      setUncontrolledCollapsed((prev) => {
+        const next = !prev
+        if (storageKey && typeof window !== 'undefined') {
+          try {
+            localStorage.setItem(storageKey, String(next))
+          } catch {
+            /* storage may be restricted */
+          }
+        }
+        return next
+      })
+    }
+  }, [isControlled, onToggleCollapse, storageKey])
+
+  useEffect(() => {
+    if (!enableShortcut) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault()
+        handleToggle()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [enableShortcut, handleToggle])
+
+  const renderBrand = () => {
+    if (!brand) return null
+    const Component = brand.as || (brand.to || brand.href ? 'a' : 'div')
+    const props: Record<string, unknown> = {
+      className: 'brand',
+      onClick: (e: React.MouseEvent) => {
+        if (brand.onClick) {
+          if (!brand.to && (!brand.href || brand.href === '#')) {
+            e.preventDefault()
+          }
+          brand.onClick(e)
+        }
+      },
+    }
+    if (brand.href) props.href = brand.href
+    if (brand.to) props.to = brand.to
+
+    return (
+      <Component {...props}>
+        {brand.logo && <span className="brand-logo">{brand.logo}</span>}
+        <span className="brand-name">{brand.title}</span>
+      </Component>
+    )
+  }
+
   return (
-    <aside className={['sidebar', collapsed ? 'is-collapsed' : '', className].filter(Boolean).join(' ')}>
+    <aside className={['sidebar', isCollapsed ? 'is-collapsed' : '', className].filter(Boolean).join(' ')}>
       <div className="sidebar-top">
         <div className="brand-row">
-          {brand && (
-            <a
-              href={brand.href || '#'}
-              className="brand"
-              onClick={(e) => {
-                if (brand.onClick) {
-                  e.preventDefault()
-                  brand.onClick()
-                }
-              }}
-            >
-              {brand.logo && <span className="brand-logo">{brand.logo}</span>}
-              <span className="brand-name">{brand.title}</span>
-            </a>
-          )}
+          {renderBrand()}
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            {onToggleCollapse && (
-              <button
-                type="button"
-                className="btn ghost sm icon collapse-btn"
-                title={collapsed ? 'Expandir barra lateral (⌘B / Ctrl+B)' : 'Plegar barra lateral (⌘B / Ctrl+B)'}
-                aria-label={collapsed ? 'Expandir barra lateral' : 'Plegar barra lateral'}
-                aria-expanded={!collapsed}
-                onClick={onToggleCollapse}
-              >
-                <PanelLeft size={16} />
-              </button>
-            )}
+            <button
+              type="button"
+              className="btn ghost sm icon collapse-btn"
+              title={isCollapsed ? 'Expandir barra lateral (⌘B / Ctrl+B)' : 'Plegar barra lateral (⌘B / Ctrl+B)'}
+              aria-label={isCollapsed ? 'Expandir barra lateral' : 'Plegar barra lateral'}
+              aria-expanded={!isCollapsed}
+              onClick={handleToggle}
+            >
+              <PanelLeft size={16} />
+            </button>
 
             {onClose && (
               <button
@@ -74,12 +158,76 @@ export function Sidebar({
           </div>
         </div>
 
+        {search && (
+          <div className="sidebar-actions">
+            <div
+              className="search-box"
+              onClick={search.onClick}
+              role={search.onClick ? 'button' : undefined}
+              tabIndex={search.onClick ? 0 : undefined}
+            >
+              <SearchIcon size={14} />
+              <span>{search.placeholder || 'Buscar'}</span>
+              <span className="kbd">{search.shortcut || '/'}</span>
+            </div>
+            <button
+              type="button"
+              className="btn ghost sm icon collapsed-only"
+              title={search.title || `Buscar (${search.shortcut || '/'})`}
+              aria-label={search.placeholder || 'Buscar'}
+              onClick={() => {
+                if (isCollapsed) handleToggle()
+                search.onClick?.()
+              }}
+            >
+              <SearchIcon size={14} />
+            </button>
+            {search.action}
+          </div>
+        )}
+
         {headerActions}
       </div>
 
-      <div className="sidebar-scroll">{children}</div>
+      <nav className="sidebar-scroll" aria-label={ariaLabel}>
+        {children}
+      </nav>
 
-      {bottom && <div className="sidebar-bottom">{bottom}</div>}
+      {bottom && (
+        <div className={['sidebar-bottom', bottomClassName].filter(Boolean).join(' ')}>
+          {bottom}
+        </div>
+      )}
     </aside>
+  )
+}
+
+export interface SidebarBottomProps {
+  className?: string
+  children: React.ReactNode
+}
+
+export function SidebarBottom({ className = '', children }: SidebarBottomProps) {
+  return <div className={['sidebar-bottom', 'row', className].filter(Boolean).join(' ')}>{children}</div>
+}
+
+export interface SidebarSectionProps {
+  title?: React.ReactNode
+  action?: React.ReactNode
+  children: React.ReactNode
+  className?: string
+}
+
+export function SidebarSection({ title, action, children, className = '' }: SidebarSectionProps) {
+  return (
+    <div className={['sidebar-section', className].filter(Boolean).join(' ')}>
+      {(title || action) && (
+        <div className="sidebar-heading">
+          {title && <span>{title}</span>}
+          {action}
+        </div>
+      )}
+      {children}
+    </div>
   )
 }

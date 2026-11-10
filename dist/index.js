@@ -1,13 +1,13 @@
-import e, { useEffect as t, useState as n } from "react";
-import { Menu as r, Moon as i, PanelLeft as a, Sun as o, X as s } from "lucide-react";
-import { jsx as c, jsxs as l } from "react/jsx-runtime";
+import e, { useCallback as t, useEffect as n, useState as r } from "react";
+import { Menu as i, Moon as a, PanelLeft as o, Search as s, Sun as c, X as l } from "lucide-react";
+import { jsx as u, jsxs as d } from "react/jsx-runtime";
 // src/theme.ts
-var u = {
+var f = {
 	system: "Sistema",
 	light: "Claro",
 	dark: "Oscuro"
-}, d = "personal.theme";
-function f(e = d) {
+}, p = "personal.theme";
+function m(e = p) {
 	if (typeof window > "u") return "system";
 	try {
 		let t = localStorage.getItem(e);
@@ -16,7 +16,7 @@ function f(e = d) {
 		return "system";
 	}
 }
-function p(e, t = d) {
+function h(e, t = p) {
 	if (typeof window < "u") {
 		try {
 			localStorage.setItem(t, e);
@@ -24,22 +24,22 @@ function p(e, t = d) {
 		e === "system" ? delete document.documentElement.dataset.theme : document.documentElement.dataset.theme = e;
 	}
 }
-function m(e) {
+function g(e) {
 	return typeof window > "u" ? !1 : e === "dark" || e !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
-function h(e = d) {
-	let [r, i] = n(() => f(e)), [a, o] = n(() => m(f(e)));
-	t(() => {
-		if (p(r, e), o(m(r)), r === "system") {
+function _(e = p) {
+	let [t, i] = r(() => m(e)), [a, o] = r(() => g(m(e)));
+	n(() => {
+		if (h(t, e), o(g(t)), t === "system") {
 			let e = window.matchMedia("(prefers-color-scheme: dark)"), t = () => o(e.matches);
 			return e.addEventListener("change", t), () => e.removeEventListener("change", t);
 		}
-	}, [r, e]);
+	}, [t, e]);
 	let s = (t) => {
-		i(t), p(t, e);
+		i(t), h(t, e);
 	};
 	return {
-		theme: r,
+		theme: t,
 		isDark: a,
 		setTheme: s,
 		cycleTheme: () => {
@@ -47,150 +47,234 @@ function h(e = d) {
 				system: "light",
 				light: "dark",
 				dark: "system"
-			}[r]);
+			}[t]);
 		}
 	};
 }
 // src/components/Sidebar.tsx
-function g({ brand: e, headerActions: t, children: n, bottom: r, onClose: i, collapsed: o = !1, onToggleCollapse: u, className: d = "" }) {
-	return /* @__PURE__ */ l("aside", {
+function v({ brand: e, search: i, headerActions: a, children: c, bottom: f, bottomClassName: p = "row", onClose: m, collapsed: h, defaultCollapsed: g = !1, onToggleCollapse: _, enableShortcut: v = !0, storageKey: y, className: b = "", "aria-label": x = "Principal" }) {
+	let S = h !== void 0, [C, w] = r(() => {
+		if (y && typeof window < "u") try {
+			let e = localStorage.getItem(y);
+			if (e !== null) return e === "true";
+		} catch {}
+		return g;
+	}), T = S ? h : C, E = t(() => {
+		_ && _(), S || w((e) => {
+			let t = !e;
+			if (y && typeof window < "u") try {
+				localStorage.setItem(y, String(t));
+			} catch {}
+			return t;
+		});
+	}, [
+		S,
+		_,
+		y
+	]);
+	return n(() => {
+		if (!v) return;
+		let e = (e) => {
+			(e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b" && (e.preventDefault(), E());
+		};
+		return window.addEventListener("keydown", e), () => window.removeEventListener("keydown", e);
+	}, [v, E]), /* @__PURE__ */ d("aside", {
 		className: [
 			"sidebar",
-			o ? "is-collapsed" : "",
-			d
+			T ? "is-collapsed" : "",
+			b
 		].filter(Boolean).join(" "),
 		children: [
-			/* @__PURE__ */ l("div", {
+			/* @__PURE__ */ d("div", {
 				className: "sidebar-top",
-				children: [/* @__PURE__ */ l("div", {
-					className: "brand-row",
-					children: [e && /* @__PURE__ */ l("a", {
-						href: e.href || "#",
-						className: "brand",
-						onClick: (t) => {
-							e.onClick && (t.preventDefault(), e.onClick());
-						},
-						children: [e.logo && /* @__PURE__ */ c("span", {
-							className: "brand-logo",
-							children: e.logo
-						}), /* @__PURE__ */ c("span", {
-							className: "brand-name",
-							children: e.title
+				children: [
+					/* @__PURE__ */ d("div", {
+						className: "brand-row",
+						children: [(() => {
+							if (!e) return null;
+							let t = e.as || (e.to || e.href ? "a" : "div"), n = {
+								className: "brand",
+								onClick: (t) => {
+									e.onClick && (e.to || e.href && e.href !== "#" || t.preventDefault(), e.onClick(t));
+								}
+							};
+							return e.href && (n.href = e.href), e.to && (n.to = e.to), /* @__PURE__ */ d(t, {
+								...n,
+								children: [e.logo && /* @__PURE__ */ u("span", {
+									className: "brand-logo",
+									children: e.logo
+								}), /* @__PURE__ */ u("span", {
+									className: "brand-name",
+									children: e.title
+								})]
+							});
+						})(), /* @__PURE__ */ d("div", {
+							style: {
+								display: "flex",
+								alignItems: "center",
+								gap: "4px"
+							},
+							children: [/* @__PURE__ */ u("button", {
+								type: "button",
+								className: "btn ghost sm icon collapse-btn",
+								title: T ? "Expandir barra lateral (⌘B / Ctrl+B)" : "Plegar barra lateral (⌘B / Ctrl+B)",
+								"aria-label": T ? "Expandir barra lateral" : "Plegar barra lateral",
+								"aria-expanded": !T,
+								onClick: E,
+								children: /* @__PURE__ */ u(o, { size: 16 })
+							}), m && /* @__PURE__ */ u("button", {
+								type: "button",
+								className: "btn ghost sm icon sidebar-close-btn",
+								onClick: m,
+								"aria-label": "Cerrar menú",
+								children: /* @__PURE__ */ u(l, { size: 16 })
+							})]
 						})]
-					}), /* @__PURE__ */ l("div", {
-						style: {
-							display: "flex",
-							alignItems: "center",
-							gap: "4px"
-						},
-						children: [u && /* @__PURE__ */ c("button", {
-							type: "button",
-							className: "btn ghost sm icon collapse-btn",
-							title: o ? "Expandir barra lateral (⌘B / Ctrl+B)" : "Plegar barra lateral (⌘B / Ctrl+B)",
-							"aria-label": o ? "Expandir barra lateral" : "Plegar barra lateral",
-							"aria-expanded": !o,
-							onClick: u,
-							children: /* @__PURE__ */ c(a, { size: 16 })
-						}), i && /* @__PURE__ */ c("button", {
-							type: "button",
-							className: "btn ghost sm icon sidebar-close-btn",
-							onClick: i,
-							"aria-label": "Cerrar menú",
-							children: /* @__PURE__ */ c(s, { size: 16 })
-						})]
-					})]
-				}), t]
+					}),
+					i && /* @__PURE__ */ d("div", {
+						className: "sidebar-actions",
+						children: [
+							/* @__PURE__ */ d("div", {
+								className: "search-box",
+								onClick: i.onClick,
+								role: i.onClick ? "button" : void 0,
+								tabIndex: i.onClick ? 0 : void 0,
+								children: [
+									/* @__PURE__ */ u(s, { size: 14 }),
+									/* @__PURE__ */ u("span", { children: i.placeholder || "Buscar" }),
+									/* @__PURE__ */ u("span", {
+										className: "kbd",
+										children: i.shortcut || "/"
+									})
+								]
+							}),
+							/* @__PURE__ */ u("button", {
+								type: "button",
+								className: "btn ghost sm icon collapsed-only",
+								title: i.title || `Buscar (${i.shortcut || "/"})`,
+								"aria-label": i.placeholder || "Buscar",
+								onClick: () => {
+									T && E(), i.onClick?.();
+								},
+								children: /* @__PURE__ */ u(s, { size: 14 })
+							}),
+							i.action
+						]
+					}),
+					a
+				]
 			}),
-			/* @__PURE__ */ c("div", {
+			/* @__PURE__ */ u("nav", {
 				className: "sidebar-scroll",
-				children: n
+				"aria-label": x,
+				children: c
 			}),
-			r && /* @__PURE__ */ c("div", {
-				className: "sidebar-bottom",
-				children: r
+			f && /* @__PURE__ */ u("div", {
+				className: ["sidebar-bottom", p].filter(Boolean).join(" "),
+				children: f
 			})
 		]
 	});
 }
-// src/components/NavItem.tsx
-function _({ label: e, icon: t, badge: n, active: r, onClick: i, href: a, to: o, as: s = a ? "a" : "button", className: u = "", title: d, children: f, ...p }) {
-	let m = {
+function y({ className: e = "", children: t }) {
+	return /* @__PURE__ */ u("div", {
 		className: [
-			"nav-item",
-			r ? "active" : "",
-			u
+			"sidebar-bottom",
+			"row",
+			e
 		].filter(Boolean).join(" "),
-		onClick: i,
-		title: d,
-		...p
+		children: t
+	});
+}
+function b({ title: e, action: t, children: n, className: r = "" }) {
+	return /* @__PURE__ */ d("div", {
+		className: ["sidebar-section", r].filter(Boolean).join(" "),
+		children: [(e || t) && /* @__PURE__ */ d("div", {
+			className: "sidebar-heading",
+			children: [e && /* @__PURE__ */ u("span", { children: e }), t]
+		}), n]
+	});
+}
+// src/components/NavItem.tsx
+function x({ label: e, icon: t, twisty: n, badge: r, active: i, onClick: a, href: o, to: s, as: c = o || s ? "a" : "button", className: l = "", title: f, style: p, children: m, ...h }) {
+	let g = [
+		"nav-item",
+		i ? "active" : "",
+		l
+	].filter(Boolean).join(" "), _ = t ?? n, v = {
+		className: g,
+		onClick: a,
+		title: f ?? (typeof e == "string" ? e : void 0),
+		style: p,
+		...h
 	};
-	return a && (m.href = a), o && (m.to = o), /* @__PURE__ */ l(s, {
-		...m,
+	return o && (v.href = o), s && (v.to = s), /* @__PURE__ */ d(c, {
+		...v,
 		children: [
-			t && /* @__PURE__ */ c("span", {
-				className: "icon",
-				children: t
+			_ && /* @__PURE__ */ u("span", {
+				className: "twisty",
+				children: _
 			}),
-			/* @__PURE__ */ c("span", {
+			/* @__PURE__ */ u("span", {
 				className: "label",
 				children: e
 			}),
-			n && /* @__PURE__ */ c("span", {
+			r != null && /* @__PURE__ */ u("span", {
 				className: "badge",
-				children: n
+				children: r
 			}),
-			f
+			m
 		]
 	});
 }
 // src/components/MobileBar.tsx
-function v({ title: e, logo: t, onToggleNav: n, actions: i, className: a = "mobile-bar" }) {
-	return /* @__PURE__ */ l("div", {
+function S({ title: e, logo: t, onToggleNav: n, actions: r, className: a = "mobile-bar" }) {
+	return /* @__PURE__ */ d("div", {
 		className: a,
 		children: [
-			/* @__PURE__ */ c("button", {
+			/* @__PURE__ */ u("button", {
 				type: "button",
 				className: "btn ghost sm icon menu-btn",
 				onClick: n,
 				"aria-label": "Abrir menú",
-				children: /* @__PURE__ */ c(r, { size: 18 })
+				children: /* @__PURE__ */ u(i, { size: 18 })
 			}),
-			t && /* @__PURE__ */ c("span", {
+			t && /* @__PURE__ */ u("span", {
 				className: "brand-logo",
 				children: t
 			}),
-			/* @__PURE__ */ c("span", {
+			/* @__PURE__ */ u("span", {
 				className: "mobile-bar-title",
 				children: e
 			}),
-			i && /* @__PURE__ */ c("div", {
+			r && /* @__PURE__ */ u("div", {
 				className: "mobile-bar-actions",
 				style: {
 					marginLeft: "auto",
 					display: "flex",
 					gap: 6
 				},
-				children: i
+				children: r
 			})
 		]
 	});
 }
 // src/components/ThemeToggle.tsx
-function y({ storageKey: e, className: t = "btn ghost sm icon", size: n = 15 }) {
-	let { theme: r, isDark: a, cycleTheme: s } = h(e);
-	return /* @__PURE__ */ c("button", {
+function C({ storageKey: e, className: t = "btn ghost sm icon", size: n = 15 }) {
+	let { theme: r, isDark: i, cycleTheme: o } = _(e);
+	return /* @__PURE__ */ u("button", {
 		type: "button",
 		className: t,
-		onClick: s,
-		title: `Tema: ${u[r]}`,
-		"aria-label": `Cambiar tema (actual: ${u[r]})`,
-		children: c(a ? i : o, { size: n })
+		onClick: o,
+		title: `Tema: ${f[r]}`,
+		"aria-label": `Cambiar tema (actual: ${f[r]})`,
+		children: u(i ? a : c, { size: n })
 	});
 }
 // src/components/Shell.tsx
-function b({ sidebar: t, mobileBar: r, children: i, className: a = "", defaultNavOpen: o = !1 }) {
-	let [s, u] = n(o), d = () => u(!1), f = () => u((e) => !e), p = typeof t == "function" ? t({ onClose: d }) : t;
-	return /* @__PURE__ */ l("div", {
+function w({ sidebar: t, mobileBar: n, children: i, className: a = "", defaultNavOpen: o = !1 }) {
+	let [s, c] = r(o), l = () => c(!1), f = () => c((e) => !e), p = typeof t == "function" ? t({ onClose: l }) : t;
+	return /* @__PURE__ */ d("div", {
 		className: [
 			"app",
 			s ? "nav-open" : "",
@@ -198,20 +282,20 @@ function b({ sidebar: t, mobileBar: r, children: i, className: a = "", defaultNa
 		].filter(Boolean).join(" "),
 		children: [
 			p,
-			/* @__PURE__ */ c("div", {
+			/* @__PURE__ */ u("div", {
 				className: "scrim",
-				onClick: d
+				onClick: l
 			}),
-			/* @__PURE__ */ l("div", {
+			/* @__PURE__ */ d("div", {
 				className: "main",
-				children: [e.isValidElement(r) ? r : r ? /* @__PURE__ */ c(v, {
-					title: r.title || "",
-					logo: r.logo,
-					actions: r.actions,
+				children: [e.isValidElement(n) ? n : n ? /* @__PURE__ */ u(S, {
+					title: n.title || "",
+					logo: n.logo,
+					actions: n.actions,
 					onToggleNav: f
 				}) : null, i]
 			})
 		]
 	});
 }
-export { v as MobileBar, _ as NavItem, b as Shell, g as Sidebar, y as ThemeToggle, p as applyTheme, f as getTheme, m as isDarkActive, u as themeLabels, h as useTheme };
+export { S as MobileBar, x as NavItem, w as Shell, v as Sidebar, y as SidebarBottom, b as SidebarSection, C as ThemeToggle, h as applyTheme, m as getTheme, g as isDarkActive, f as themeLabels, _ as useTheme };

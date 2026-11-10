@@ -197,7 +197,8 @@ a {
   text-overflow: ellipsis;
 }
 
-.nav-item .twisty {
+.nav-item .twisty,
+.nav-item .icon {
   width: 16px;
   height: 16px;
   display: grid;
@@ -207,7 +208,8 @@ a {
   flex-shrink: 0;
 }
 
-.nav-item .twisty:hover {
+.nav-item .twisty:hover,
+.nav-item .icon:hover {
   background: var(--bg-active);
 }
 
@@ -220,10 +222,17 @@ a {
   border-top: 1px solid var(--border);
   padding: 8px;
   margin-top: auto;
+  position: relative;
+}
+
+.sidebar-bottom.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .sidebar-close-btn {
-  display: none;
+  display: none !important;
 }
 
 /* ------------------------------------------------------------- desktop collapsible */
@@ -297,7 +306,8 @@ a {
 
   .sidebar.is-collapsed .nav-item .label,
   .sidebar.is-collapsed .nav-item .badge,
-  .sidebar.is-collapsed .nav-item .twisty:empty {
+  .sidebar.is-collapsed .nav-item .twisty:empty,
+  .sidebar.is-collapsed .nav-item .icon:empty {
     display: none;
   }
 
@@ -366,6 +376,6 @@ a {
     font-weight: 600;
   }
   .sidebar-close-btn {
-    display: inline-flex;
+    display: inline-flex !important;
   }
 }
