@@ -121,3 +121,7 @@ For a command palette or search dialog, pass `search.onClick` without `onChange`
 npm install
 npm run build
 ```
+
+### Command palette
+
+Use `CommandPalette` as the standard search dialog. Pass an `open` state, `onClose`, and an array of `{ id, label, description?, keywords?, icon?, onSelect }` items. Pair it with `Sidebar`'s `search={{ onClick: () => setOpen(true) }}` to open it from the sidebar or `/`. The palette filters supplied items, supports arrow keys, Enter and Escape, and uses the shared modal styling. Apps own their results and actions.

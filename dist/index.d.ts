@@ -5,3 +5,4 @@ export * from './components/NavItem';
 export * from './components/MobileBar';
 export * from './components/ThemeToggle';
 export * from './components/Shell';
+export * from './components/CommandPalette';
