@@ -86,16 +86,35 @@ a {
   width: 100%;
 }
 
-.collapse-btn {
+.collapse-btn,
+.btn.collapse-btn {
   color: var(--text-2);
 }
 
-.collapse-btn:hover {
+.collapse-btn:hover,
+.btn.collapse-btn:hover {
   color: var(--text);
 }
 
-.collapsed-only {
+.collapsed-only,
+.btn.collapsed-only {
   display: none;
+  color: var(--text-2);
+}
+
+.collapsed-only:hover,
+.btn.collapsed-only:hover {
+  color: var(--text);
+}
+
+.sidebar-close-btn,
+.btn.sidebar-close-btn {
+  color: var(--text-2);
+}
+
+.sidebar-close-btn:hover,
+.btn.sidebar-close-btn:hover {
+  color: var(--text);
 }
 
 .brand-logo {
