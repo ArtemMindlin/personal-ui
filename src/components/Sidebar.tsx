@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { PanelLeft, X, Search as SearchIcon, Settings } from 'lucide-react'
 import { NavItem } from './NavItem'
 import { ThemeToggle } from './ThemeToggle'
+import { CreateMenu, type CreateMenuItem } from './CreateMenu'
 
 export interface SidebarBrand {
   logo?: React.ReactNode
@@ -39,6 +40,7 @@ export interface SidebarProps {
   brand?: SidebarBrand
   search?: SidebarSearch
   headerActions?: React.ReactNode
+  createItems?: CreateMenuItem[]
   children: React.ReactNode
   footer?: SidebarFooter | boolean
   bottom?: React.ReactNode
@@ -60,6 +62,7 @@ export function Sidebar({
   brand,
   search,
   headerActions,
+  createItems,
   children,
   footer,
   bottom,
@@ -294,7 +297,7 @@ export function Sidebar({
             >
               <SearchIcon size={14} />
             </button>
-            {search.action}
+            {createItems?.length ? <CreateMenu items={createItems} /> : search.action}
           </div>
         )}
 
