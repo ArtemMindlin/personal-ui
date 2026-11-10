@@ -125,3 +125,19 @@ npm run build
 ### Command palette
 
 Use `CommandPalette` as the standard search dialog. Pass an `open` state, `onClose`, and an array of `{ id, label, description?, keywords?, icon?, onSelect }` items. Pair it with `Sidebar`'s `search={{ onClick: () => setOpen(true) }}` to open it from the sidebar or `/`. The palette filters supplied items, supports arrow keys, Enter and Escape, and uses the shared modal styling. Apps own their results and actions.
+
+### Sidebar create menu
+
+Pass `createItems` to `Sidebar` to display the shared `+` button and menu beside search. Each item has a stable `id`, a `label`, an optional `icon`, and an `onSelect` callback. The shared component owns the appearance, outside-click and Escape behavior, and keyboard navigation; each app supplies its own actions. `createItems` takes precedence over the legacy `search.action` slot.
+
+```tsx
+<Sidebar
+  brand={{ title: 'Mi aplicación' }}
+  search={{ onClick: openSearch }}
+  createItems={[
+    { id: 'new-item', label: 'Nuevo elemento', onSelect: openNewItem },
+  ]}
+>
+  {navigation}
+</Sidebar>
+```
